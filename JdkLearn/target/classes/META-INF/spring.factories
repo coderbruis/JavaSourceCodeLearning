@@ -1,0 +1,5 @@
+# Initializer
+org.springframework.context.ApplicationContextInitializer=com.learnjava.initializer.FirstInitializer
+
+# listener
+org.springframework.context.ApplicationListener=com.learnjava.listener.FirstListener
