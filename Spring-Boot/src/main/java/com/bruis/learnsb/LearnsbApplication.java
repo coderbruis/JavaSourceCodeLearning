@@ -8,10 +8,9 @@ import java.util.Properties;
 
 @SpringBootApplication
 @PropertySource({"demo.properties"})
-public class Application {
+public class LearnsbApplication {
 
     public static void main(String[] args) {
-        //SpringApplication.run(LearnjavaApplication.class, args);
         // 注册系统初始化器
         /*
         SpringApplication springApplication = new SpringApplication(LearnjavaApplication.class);
@@ -24,11 +23,14 @@ public class Application {
         //springApplication.addListeners(new SecondListener());
         //springApplication.run();
 
-        SpringApplication springApplication = new SpringApplication(Application.class);
+
+        SpringApplication springApplication = new SpringApplication(LearnsbApplication.class);
         Properties properties = new Properties();
-        properties.setProperty("mooc.website.url", "http://www.mooc.cn");
+        // 从配置文件中获取
+        properties.setProperty("bruis.github.url", "01-https://github.com/coderbruis/JavaSourceLearning");
         springApplication.setDefaultProperties(properties);
         springApplication.run(args);
+
     }
 
 }

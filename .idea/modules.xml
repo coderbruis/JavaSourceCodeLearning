@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/JavaSourceLearning.iml" filepath="$PROJECT_DIR$/.idea/JavaSourceLearning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Spring-AOP/learnaop.iml" filepath="$PROJECT_DIR$/Spring-AOP/learnaop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JdkLearn/learnjava.iml" filepath="$PROJECT_DIR$/JdkLearn/learnjava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Spring-Boot/learnsb.iml" filepath="$PROJECT_DIR$/Spring-Boot/learnsb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Spring/learnspring.iml" filepath="$PROJECT_DIR$/Spring/learnspring.iml" />
+    </modules>
+  </component>
+</project>

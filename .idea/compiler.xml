@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="learnaop" />
+        <module name="learnjava" />
+        <module name="Spring" />
+        <module name="learnspring" />
+        <module name="learnsb" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="JdkLearn" target="1.8" />
+      <module name="learnaop" target="1.8" />
+      <module name="learnjava" target="1.8" />
+      <module name="learnsb" target="1.8" />
+      <module name="learnspring" target="1.8" />
+      <module name="Spring" target="1.8" />
+      <module name="Spring-AOP" target="1.8" />
+      <module name="Spring-Boot" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="JdkLearn" options="-parameters" />
+      <module name="Spring" options="-parameters" />
+      <module name="Spring-AOP" options="-parameters" />
+      <module name="Spring-Boot" options="-parameters" />
+      <module name="learnaop" options="-parameters" />
+      <module name="learnjava" options="-parameters" />
+      <module name="learnsb" options="-parameters" />
+      <module name="learnspring" options="-parameters" />
+    </option>
+  </component>
+</project>
