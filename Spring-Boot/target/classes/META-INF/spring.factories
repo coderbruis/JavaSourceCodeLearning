@@ -1,5 +1,0 @@
-# Initializer
-org.springframework.context.ApplicationContextInitializer=com.bruis.learnsb.initializer.FirstInitializer
-
-# listener
-org.springframework.context.ApplicationListener=com.bruis.learnsb.listener.FirstListener
