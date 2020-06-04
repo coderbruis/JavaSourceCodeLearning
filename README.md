@@ -14,7 +14,7 @@
     
     - 超大超全Spring源码知识脑图
     
-    ![image](https://github.com/coderbruis/JavaSourceLearning/tree/master/note/images/Spring.png)
+    ![image](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/images/Spring.png)
     
     - [在IDEA中构建Spring源码](https://blog.csdn.net/CoderBruis/article/details/85840438)
     - [深入SpringIOC容器一](https://blog.csdn.net/CoderBruis/article/details/85940756)
@@ -25,7 +25,7 @@
      
     - 超大超全Spring源码知识脑图
     
-    ![image](https://github.com/coderbruis/JavaSourceLearning/tree/master/note/images/SpringBoot.png)
+    ![image](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/images/SpringBoot.png)
     
     - [深入学习SpringAOP源码（一）——注册AnnotationAwareAspectJAutoProxyCreator](https://blog.csdn.net/CoderBruis/article/details/100031756)
     - [深入学习SpringAOP源码（二）—— 深入AnnotationAwareAspectJAutoProxyCreator](https://blog.csdn.net/CoderBruis/article/details/100042081)
