@@ -21,11 +21,7 @@
     - [深入SpringIOC容器二](https://blog.csdn.net/CoderBruis/article/details/86505582)
 
 -   SpringAOP源码学习
-    - Spring版本：5.2.1.RELEASE
-     
-    - 超大超全Spring源码知识脑图
-    
-    ![image](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/images/SpringBoot.png)
+    - Spring版本：5.2.1.RELEASE 
     
     - [深入学习SpringAOP源码（一）——注册AnnotationAwareAspectJAutoProxyCreator](https://blog.csdn.net/CoderBruis/article/details/100031756)
     - [深入学习SpringAOP源码（二）—— 深入AnnotationAwareAspectJAutoProxyCreator](https://blog.csdn.net/CoderBruis/article/details/100042081)
@@ -33,3 +29,9 @@
 
 -   SpringBoot源码学习
     - SpringBoot版本：2.2.1.RELEASE
+    
+    - 超大超全Spring源码知识脑图
+    
+    ![image](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/images/SpringBoot.png)
+    
+    -[深入SpringBoot源码学习之——SpringFactoriesLoader](https://blog.csdn.net/CoderBruis/article/details/106559304)
