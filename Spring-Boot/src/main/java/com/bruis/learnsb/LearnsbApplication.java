@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import java.util.Properties;
 
 @SpringBootApplication
-@PropertySource({"demo.properties"})
+//@PropertySource({"demo.properties"})
 public class LearnsbApplication {
 
     public static void main(String[] args) {

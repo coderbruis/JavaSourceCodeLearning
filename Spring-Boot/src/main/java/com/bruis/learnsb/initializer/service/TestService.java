@@ -25,12 +25,12 @@ public class TestService implements ApplicationContextAware {
 
     public String test() {
         // 从注册进Environment中的map中获取值
-        return applicationContext.getEnvironment().getProperty("key1");
+        return applicationContext.getEnvironment().getProperty("coderbruis");
     }
 
     public String test2() {
         // 从注册进Environment中的map中获取值
-        return applicationContext.getEnvironment().getProperty("key2");
+        return applicationContext.getEnvironment().getProperty("key");
     }
 
 }

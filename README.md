@@ -1,5 +1,7 @@
 源码深入学习：Spring源码、SpringBoot源码、SpringAOP源码、JDK源码、Netty源码
 
+持续更新中...
+
 # 目录
 
 -   项目导入
@@ -34,4 +36,7 @@
     
     ![image](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/images/SpringBoot.png)
     
-    -[深入SpringBoot源码学习之——SpringFactoriesLoader](https://blog.csdn.net/CoderBruis/article/details/106559304)
+    - [深入SpringBoot源码学习之——SpringFactoriesLoader](https://blog.csdn.net/CoderBruis/article/details/106559304) 
+    - [深入SpringBoot源码学习之——系统初始化器](https://blog.csdn.net/CoderBruis/article/details/106610007)
+)
+    
