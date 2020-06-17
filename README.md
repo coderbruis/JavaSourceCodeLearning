@@ -9,6 +9,8 @@
 
 -   JDK源码学习
     - JDK版本：1.8.0_77
+    - [深入学习String源码与底层（一）](https://blog.csdn.net/CoderBruis/article/details/94884673)
+    - [深入学习String源码与底层（二）](https://blog.csdn.net/CoderBruis/article/details/95620935)
     - [深入解读CompletableFuture源码与原理](https://blog.csdn.net/CoderBruis/article/details/103181520)
 
 -   Spring源码学习
