@@ -2,6 +2,10 @@
 
 持续更新中...
 
+Tip：
+如果读者电脑无法浏览到github图片，则需要设置hosts配置文件, 解决办法：[解决GitHub网页githubusercontent地址无法访问问题
+](https://zhuanlan.zhihu.com/p/107691233)
+
 # 目录
 
 -   项目导入
