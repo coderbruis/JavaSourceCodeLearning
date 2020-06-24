@@ -11,11 +11,6 @@ import java.util.List;
 @Component
 public abstract class AbstractEventMulticaster implements EventMulticaster{
 
-    /**
-     *
-     * 惊！WeatherListener接口实现类@Component注解过后，竟然能自动装配到对应的接口集合中？
-     *
-     */
     @Autowired
     private List<WeatherListener> listenerList;
 
