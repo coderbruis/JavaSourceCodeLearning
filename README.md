@@ -46,3 +46,8 @@ Tip：
     - [深入SpringBoot源码学习之——系统初始化器](https://blog.csdn.net/CoderBruis/article/details/106610007)
     - [深入SpringBoot源码学习之——SpringBoot的事件和监听器](https://blog.csdn.net/CoderBruis/article/details/106896656)
     
+
+-   Netty源码学习
+    - [二进制运算以及源码、反码以及补码学习](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/%E4%BA%8C%E8%BF%9B%E5%88%B6.md) 
+    - [Netty源码包结构](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E6%BA%90%E7%A0%81%E5%8C%85%E7%BB%93%E6%9E%84.md)
+    - [Netty中的EventLoopGroup](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E4%B8%AD%E7%9A%84EventLoopGroup%E6%98%AF%E4%BB%80%E4%B9%88.md)
