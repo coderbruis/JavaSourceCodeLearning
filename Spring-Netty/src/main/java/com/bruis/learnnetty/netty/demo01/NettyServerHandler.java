@@ -8,6 +8,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
 import io.netty.util.CharsetUtil;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author LuoHaiYang
  */
@@ -35,6 +37,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception {
+/*
         System.out.println("服务器读取线程 " + Thread.currentThread().getName());
         System.out.println("server ctx = " + ctx);
         System.out.println("看看Channel和pipeline的关系");
@@ -46,6 +49,51 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = (ByteBuf)msg;
         System.out.println("客户端发送消息是：" + byteBuf.toString(CharsetUtil.UTF_8));
         System.out.println("客户端地址：" + channel.remoteAddress());
+*/
+
+        // 自定义任务
+/*
+        ctx.channel().eventLoop().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5 * 1000);
+                    ctx.writeAndFlush(Unpooled.copiedBuffer("hello, client... task", CharsetUtil.UTF_8));
+                    System.out.println("channel hashcode = " + ctx.channel().hashCode());
+                } catch (Exception e) {
+                    System.out.println("Exception" + e.getMessage());
+                }
+            }
+        });
+
+        ctx.channel().eventLoop().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5 * 1000);
+                    ctx.writeAndFlush(Unpooled.copiedBuffer("hello, client2... task", CharsetUtil.UTF_8));
+                    System.out.println("channel hashcode = " + ctx.channel().hashCode());
+                } catch (Exception e) {
+                    System.out.println("Exception" + e.getMessage());
+                }
+            }
+        });
+*/
+
+        // 自定义定时任务
+        ctx.channel().eventLoop().schedule(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5 * 1000);
+                    ctx.writeAndFlush(Unpooled.copiedBuffer("hello, client3... task", CharsetUtil.UTF_8));
+                    System.out.println("channel hashcode = " + ctx.channel().hashCode());
+                } catch (Exception e) {
+                    System.out.println("error" + e);
+                }
+            }
+        }, 5, TimeUnit.SECONDS);
+
     }
 
     /**
