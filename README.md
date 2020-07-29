@@ -1,6 +1,26 @@
-源码深入学习：Spring源码、SpringBoot源码、SpringAOP源码、JDK源码、Netty源码
 
-持续更新中...
+<p align="center">
+  <a href="https://www.oracle.com/cn/java/technologies/javase/javase-jdk8-downloads.html">
+    <img src="https://img.shields.io/badge/JDK-1.8.0__77-brightgreen" alt="JDK">
+  </a>
+  <a href="https://spring.io/">
+    <img src="https://img.shields.io/badge/Spring-5.2.1.RELEASE-green" alt="Spring">
+  </a>
+  <a href="https://spring.io/projects/spring-boot">
+    <img src="https://img.shields.io/badge/SpringBoot-2.2.1.RELEASE-yellowgreen" alt="SpringBoot">
+  </a>
+  <a href="https://spring.io/projects/spring-security">
+    <img src="https://img.shields.io/badge/SpringSecurity-5.1.0.RELEASE-orange" alt="SpringSecurity">
+  </a>
+  <a href="https://spring.io/projects/spring-security-oauth">
+    <img src="https://img.shields.io/badge/Spring--Security--OAuth2-2.3.5.RELEASE-red" alt="Spring-Security-OAuth2">
+  </a>
+  <a href="https://netty.io/">
+    <img src="https://img.shields.io/badge/Netty-4-blue" alt="Netty">
+  </a>
+</p>
+
+源码深入学习：Spring源码、SpringBoot源码、SpringAOP源码、SpringSecurity源码、OAuth2源码、JDK源码、Netty源码
 
 Tip：
 如果读者电脑无法浏览到github图片，则需要设置hosts配置文件, 解决办法：[解决GitHub网页githubusercontent地址无法访问问题
@@ -49,4 +69,6 @@ Tip：
     - [Netty中的EventLoopGroup](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E4%B8%AD%E7%9A%84EventLoopGroup%E6%98%AF%E4%BB%80%E4%B9%88.md)
     
 -   SpringSecurity&OAuth2源码学习
+    - SpringSecurity版本：5.1.0.RELEASE
     - [从零开始系统学习SpringSecurity和OAuth2（一）—— 初识SpringSecurity](https://blog.csdn.net/CoderBruis/article/details/107297547)    
+    - [从零开始系统学习SpringSecurity和OAuth2（二）—— 安全过滤器FilterChainProxy](https://blog.csdn.net/CoderBruis/article/details/107604400)
