@@ -20,7 +20,9 @@ import java.util.Scanner;
 public class Client {
     private static final String HOST = "127.0.0.1";
     private static final int PORT = 8000;
+    // 休眠时间
     private static final int SLEEP_TIME = 5000;
+    // 最大数据大小
     public static final int MAX_DATA_LEN = 1024;
 
     public static void main(String[] args) throws IOException {
@@ -31,10 +33,13 @@ public class Client {
         while (true) {
             try {
                 Scanner scan = new Scanner(System.in);
+                // 读取控制台输入信息
                 String clientMessage = scan.nextLine();
                 System.out.println("客户端发送数据: " + clientMessage);
+                // 将数据写入流中
                 socket.getOutputStream().write(clientMessage.getBytes());
 
+                // 将数据从JVM中读取出来，存放在输入流中
                 InputStream inputStream = socket.getInputStream();
 
                 byte[] data = new byte[MAX_DATA_LEN];
