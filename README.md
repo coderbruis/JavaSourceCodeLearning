@@ -29,7 +29,7 @@ Tip：
 # 目录
 
 -   项目导入
-    将整个JavaSourceLearning导入IDEA中，然后选中项目pom.xml文件右键，open as maven project然后等待maven下载相应jar包即可。
+    将整个JavaSourceCodeLearning导入IDEA中，然后选中项目pom.xml文件右键，open as maven project然后等待maven下载相应jar包即可。
 
 -   JDK源码学习
     - JDK版本：1.8.0_77
