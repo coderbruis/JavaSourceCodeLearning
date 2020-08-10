@@ -1,4 +1,17 @@
-@[toc]
+<!-- TOC -->- [前言](#前言)
+- [正文](#正文)    
+	- [1.  FilterChainProxy什么时候注入Spring容器中的](#1--filterchainproxy什么时候注入spring容器中的)    
+	- [2. WebSecurityConfiguration类](#2-websecurityconfiguration类)    
+	- [3. WebSecurity类](#3-websecurity类)    
+	- [4. AbstractConfiguredSecurityBuilder类](#4-abstractconfiguredsecuritybuilder类)    
+	- [5. SecurityConfigurer类](#5-securityconfigurer类)    
+	- [6. doBuild()方法](#6-dobuild方法)    
+	- [7. WebSecurity什么时候被创建的？](#7-websecurity什么时候被创建的)
+- [总结](#总结)
+- [参考](#参考)
+- [相关文章](#相关文章)
+ 
+<!-- /TOC -->
 ## 前言
 相信了解过SpringSecurity或者是OAuth2的读者，会发现网上会有非常多的相关文章，或是纯概念的，或是带有demo的，无论是哪种类型的文章，本人去阅读之后，对于整个框架的概念还是一知半解，也仅仅是实现了某些功能、某些效果而已，若遇到某些问题时无从下手，只能去百度去Google。这是因为对于SpringSecurity和OAuth2的知识没有一个整体概念的把握，知识体系没有形成系统，遂决定写一个关于SpringSecurity和OAuth2的系列专栏，在建造自己知识体系的同时还希望能帮助有同样困惑的同学。
 
@@ -356,4 +369,5 @@ performBuild()方法是AbstractConfiguredSecurityBuilder提供的抽象方法，
 - [深入浅出Spring Security（一）：三句话解释框架原理](https://blog.csdn.net/zimou5581/article/details/102457672)
 
 ## 相关文章
-- [从零开始系统学习SpringSecurity和OAuth2（一）—— 初识SpringSecurity](https://blog.csdn.net/CoderBruis/article/details/107297547)
+- [从零开始系统学习SpringSecurity和OAuth2（一）—— 初识SpringSecurity](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/SpringSecurity/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0SpringSecurity%E5%92%8COAuth2%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%20%E5%88%9D%E8%AF%86SpringSecurity.md)
+- [从零开始系统学习SpringSecurity和OAuth2（三）—— WebSecurity建造核心逻辑](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/SpringSecurity/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0SpringSecurity%E5%92%8COAuth2%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%94%20WebSecurity%E5%BB%BA%E9%80%A0%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91.md)
