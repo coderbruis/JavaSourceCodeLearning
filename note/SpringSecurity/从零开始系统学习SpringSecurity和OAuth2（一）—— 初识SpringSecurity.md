@@ -176,13 +176,10 @@ int vote(Authentication authentication, S object,
 ## 总结
 本片文章粗略的讲解了SpringSecurity里的几个核心概念，包括：核心注解、认证和授权的核心组件以及SpringSecurity中的FilterChainProxy，整个SpringSecurity框架就是围绕着这几个核心概念运行，下面几章将会深入分析每个核心概念的底层运行机制。
 
-> 作者本人github中开发并维护着一个后端基于Dubbo+SpringBoot+SpringSecurity+OAuth2而前端基于Vue的前后端分离电商项目，其中还维护着一个实战专栏用于详细记录开发该电商项目时遇到的技术难点以及解决方案，感兴趣读者可以前往查看，后端地址如下：
-> [https://github.com/coderbruis/Distributed-mall](https://github.com/coderbruis/Distributed-mall)
-
 ## 参考
 - [《spring-security-architecture》](https://spring.io/guides/topicals/spring-security-architecture)
 - [《Spring Security Reference》](https://docs.spring.io/spring-security/site/docs/current/reference/html5/#preface)
 
 ## 相关文章
 - [从零开始系统学习SpringSecurity和OAuth2（二）—— 安全过滤器FilterChainProxy](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/SpringSecurity/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0SpringSecurity%E5%92%8COAuth2%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%20%E5%AE%89%E5%85%A8%E8%BF%87%E6%BB%A4%E5%99%A8FilterChainProxy.md)
-系统学习SpringSecurity和OAuth2（三）—— WebSecurity建造核心逻辑](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/SpringSecurity/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0SpringSecurity%E5%92%8COAuth2%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%94%20WebSecurity%E5%BB%BA%E9%80%A0%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91.md- [从零开始)
+- [从零开始系统学习SpringSecurity和OAuth2（三）—— WebSecurity建造核心逻辑](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/SpringSecurity/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0SpringSecurity%E5%92%8COAuth2%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%94%20WebSecurity%E5%BB%BA%E9%80%A0%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91.md)
