@@ -1,3 +1,23 @@
+<!-- TOC -->
+- [前言](#前言)
+- [正文](#正文)    
+  - [1 基础](#1-基础)        
+    - [1.1 String的修饰符与实现类](#11-string的修饰符与实现类)   
+    - [1.2 String类的成员变量](#12-string类的成员变量)            
+      - [1.2.1 String是通过char数组来保存字符串的](#121-string是通过char数组来保存字符串的)            
+      - [1.2.2 String类的属性hash](#122-string类的属性hash)            
+      - [1.2.3 serialVersionUID属性作为String类的序列化ID](#123-serialversionuid属性作为string类的序列化id)            
+      - [1.2.4 serialPersistentFields属性](#124-serialpersistentfields属性)       
+    - [1.3 创建String对象](#13-创建string对象)
+    - [1.4 String被设计为不可变性的原因](#14-string被设计为不可变性的原因)    
+  - [2 深入String](#2-深入string)        
+    - [2.1 先了解一下JAVA内存区域](#21-先了解一下java内存区域)        
+    - [2.2 String与JAVA内存区域](#22-string与java内存区域)       
+    - [2.3 String的intern方法](#23-string的intern方法)            
+      - [2.3.1 重新理解使用new和字面量创建字符串的两种方式](#231-重新理解使用new和字面量创建字符串的两种方式)            
+      - [2.3.2 解析](#232-解析)
+<!-- /TOC -->
+
 ## 前言
 
 不想成为一个只会使用API的攻城狮，也不甘于现状想深入学习JDK。

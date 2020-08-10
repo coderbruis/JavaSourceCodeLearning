@@ -1,3 +1,19 @@
+<!-- TOC -->
+- [前言](#前言)
+ [正文](#正文)    
+    - [1. String的equals方法](#1-string的equals方法)    
+    - [2. String的hashcode方法](#2-string的hashcode方法)    
+    - [3. String的hashcode()和equals()](#3-string的hashcode和equals)    
+    - [4. String的compareTo()方法](#4-string的compareto方法)    
+    - [5. String的startWith(String prefix)方法](#5-string的startwithstring-prefix方法)
+    - [6. String的endsWith(String suffix)方法](#6-string的endswithstring-suffix方法)    
+    - [7. String的indexOf(int ch)方法](#7-string的indexofint-ch方法)    
+    - [8. String的split(String regex, int limit)方法](#8-string的splitstring-regex-int-limit方法)        
+        - [8.1 源码分析1](#81-源码分析1)        
+        - [8.2 源码分析2](#82-源码分析2)
+- [总结](#总结)
+<!-- /TOC -->
+
 ## 前言
 
 不想成为一个只会使用API的攻城狮，也不甘于现状想深入学习JDK源码。

@@ -1,3 +1,14 @@
+<!-- TOC -->
+- [1 前言](#1-前言)
+- [2 正文](#2-正文)    
+    - [2.1 JDK官方文档解释](#21-jdk官方文档解释)
+    - [2.2 使用下CompletableFuture的API](#22-使用下completablefuture的api)    
+    - [2.3 源码分析](#23-源码分析)        
+    - [Completion](#completion)        
+    - [CompletionStage](#completionstage)
+    - [总结](#总结)
+<!-- /TOC -->
+
 ## 1 前言
 最近在看公司源码，发现有些服务大量使用到了CompletableFuture，学了这么久Java，对这个类还是挺陌生的，实在惭愧。于是利用了业余时间认真学习并总结了下CompletableFuture的特性以及用法。
 
@@ -554,11 +565,6 @@ main线程会在asyncSupplyStage()方法中返回d，就是我们的“依赖任
 2. CompletableFuture实现了CompletionStage接口，因而具备了链式调用的能力，CompletionStage提供了either、apply、run以及then等相关方法，使得CompletableFuture可以使用各种应用场景。
 3. CompletableFuture中有“源任务”和“依赖任务”，“源任务”的完成能够触发“依赖任务”的执行，这里的完成可以是返回正常结果或者是异常。
 4. CompletableFuture默认使用ForkJoinPool，也可以使用指定线程池来执行任务。
-
-文中的测试用例都在下列源码的JdkLearn模块的test目录下。
-
-> 源码地址：https://github.com/coderbruis/JavaSourceLearning
-
 
 
 参考文档：
