@@ -1,3 +1,11 @@
+<!-- TOC -->
+- [前言](#前言)
+- [在web容器中初始化spring容器](#在web容器中初始化spring容器)
+    - [SpringIOC容器和Web容器](#springioc容器和web容器)
+	- [ContextLoaderListener](#contextloaderlistener)
+- [总结](#总结)
+<!-- /TOC -->
+
 ## 前言
 
 继上一篇文章深入了解了在普通的Spring应用程序中如何创建并启动SpringIOC容器的，下面，深入学习一下在web容器中，是如何创建、初始化并启动SpringIOC容器的。

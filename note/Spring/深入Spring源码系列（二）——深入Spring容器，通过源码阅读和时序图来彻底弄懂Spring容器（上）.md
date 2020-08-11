@@ -1,4 +1,14 @@
-
+<!-- TOC -->
+- [前言](#前言)
+- [进入正题](#进入正题)
+    - [DefaultListableBeanFactory](#defaultlistablebeanfactory)
+	- [XmlBeanDefinitionReader](#xmlbeandefinitionreader)
+	- [通过xml配置文件来初始化容器](#通过xml配置文件来初始化容器)    
+	- [提问环节](#提问环节)
+	    - [深入理解Spring容器如何创建bean和初始化bean](#深入理解spring容器如何创建bean和初始化bean)
+		- [在web容器中初始化spring容器](#在web容器中初始化spring容器)
+- [参考](#参考)
+		<!-- /TOC -->
 ## 前言
 **Spring版本: Spring5-0-3**
 
