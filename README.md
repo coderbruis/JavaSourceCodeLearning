@@ -20,11 +20,27 @@
   </a>
 </p>
 
-源码深入学习：Spring源码、SpringBoot源码、SpringAOP源码、SpringSecurity源码、OAuth2源码、JDK源码、Netty源码
+Java流行框架源码分析，学习以及总结。
 
-Tip：
-如果读者电脑无法浏览到github图片，则需要设置hosts配置文件, 解决办法：[解决GitHub网页githubusercontent地址无法访问问题
-](https://zhuanlan.zhihu.com/p/107691233)
+框架包括：
+
+1. Spring源码【更新中】
+2. SpringBoot源码【更新中】
+3. SpringAOP源码【更新中】
+4. SpringSecurity源码【更新中】
+5. SpringSecurity OAuth2源码【更新中】
+6. JDK源码【更新中】
+7. Netty源码（待）
+8. MyBatis（待）
+9. Dubbo源码（待）
+10. SpringCloud（待）
+
+> 为什么要分析、学习源码？
+
+学习一个框架的源码，不仅在实际使用时如果出现问题，可以快速定位出问题，找到问题原因并解决，同时还可以学习到框架的架构思想以与设计模式。当然，学习框架底层源码还可以提升我们自身的水平，在大厂面试时能够在众多面试者中脱颖而出。因此学习框架虽然枯燥乏味，但罗马并非一日建成的，所以平时之余就要多学习框架底层源码，
+这样在用到的时候就能游刃有余。
+
+> Tip：如果读者电脑无法浏览到github图片，则需要设置hosts配置文件, 解决办法：[解决GitHub网页githubusercontent地址无法访问问题](https://zhuanlan.zhihu.com/p/107691233)
 
 # 目录
 
@@ -80,6 +96,6 @@ Tip：
     
 # 支持
 
-  开源不易，各位帅哥美女们star支持一下....
+  原创不易，各位帅哥美女star支持下...
 
 
