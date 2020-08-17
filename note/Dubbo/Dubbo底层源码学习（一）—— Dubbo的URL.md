@@ -92,7 +92,7 @@ consumer://30.5.120.217/org.apache.dubbo.demo.DemoService?application=demo-consu
 
 > 解析服务
     
-![dubbo01](https://github.com/coderbruis/JavaSourceCodeLearning/tree/master/note/images/Dubbo/dubbo01.png)
+![dubbo01](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/dubbo01.png)
 
 在Dubbo的jar包中的META-INF/spring.handlers配置，配置了DubboNamespaceHandler处理类，在遇到dubbo命名空间时，会进行解析。
 
