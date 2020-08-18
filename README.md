@@ -32,7 +32,7 @@ Java流行框架源码分析，学习以及总结。
 6. JDK源码【更新中】
 7. Netty源码（待）
 8. MyBatis（待）
-9. Dubbo源码（待）
+9. Dubbo源码【更新中】
 10. SpringCloud（待）
 
 > 为什么要分析、学习源码？
