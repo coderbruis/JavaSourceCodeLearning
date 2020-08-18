@@ -362,9 +362,6 @@ performBuild()方法是AbstractConfiguredSecurityBuilder提供的抽象方法，
 
 
 
-> 作者本人github中开发并维护着一个后端基于Dubbo+SpringBoot+SpringSecurity+OAuth2而前端基于Vue的前后端分离电商项目，其中还维护着一个实战专栏用于详细记录开发该电商项目时遇到的技术难点以及解决方案，感兴趣读者可以前往查看，后端地址如下：
-> [https://github.com/coderbruis/Distributed-mall](https://github.com/coderbruis/Distributed-mall)
-
 ## 参考
 - [深入浅出Spring Security（一）：三句话解释框架原理](https://blog.csdn.net/zimou5581/article/details/102457672)
 

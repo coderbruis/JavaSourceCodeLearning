@@ -3,7 +3,7 @@
 
 这里先学习下 SpringFactoriesLoader，这个类在SpringBoot整个底层源码中起到了非常关键的作用，置于有多关键，等读完整片文章你们就知道了。
 
-**SpringBoot版本：5.2.1.RELEASE**
+**SpringBoot版本：2.2.1.RELEASE**
 
 ## 正文
 
