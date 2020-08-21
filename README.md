@@ -24,16 +24,17 @@ Java流行框架源码分析，学习以及总结。
 
 框架包括：
 
-1. Spring源码【更新中】
-2. SpringBoot源码【更新中】
-3. SpringAOP源码【更新中】
-4. SpringSecurity源码【更新中】
-5. SpringSecurity OAuth2源码【更新中】
-6. JDK源码【更新中】
-7. Netty源码（待）
-8. MyBatis（待）
-9. Dubbo源码【更新中】
-10. SpringCloud（待）
+
+- [x] Spring源码
+- [x] SpringBoot源码
+- [x] SpringAOP源码
+- [x] SpringSecurity源码
+- [x] SpringSecurity OAuth2源码
+- [x] JDK源码
+- [ ] Netty源码
+- [ ] MyBatis源码
+- [x] Dubbo源码
+- [ ] SpringCloud源码
 
 > 为什么要分析、学习源码？
 
