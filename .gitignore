@@ -8,6 +8,7 @@ Spring/learnspring.iml
 Spring-AOP/learnaop.iml
 Spring-Netty/Spring-Netty.iml
 Spring-Security/SpringSecurityDemo.iml
+Spring-Security/springsecurity.iml
 
 # target
 JdkLearn/target
