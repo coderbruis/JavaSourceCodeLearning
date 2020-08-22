@@ -7,6 +7,7 @@ Spring-Boot/learnsb.iml
 Spring/learnspring.iml
 Spring-AOP/learnaop.iml
 Spring-Netty/Spring-Netty.iml
+Spring-Security/springsecurity.iml
 
 # target
 JdkLearn/target
@@ -14,6 +15,7 @@ Spring/target
 Spring-AOP/target
 Spring-Boot/target
 Spring-Netty/target
+Spring-Security/target
 
 # .DO_Store
 .DS_Store
