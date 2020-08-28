@@ -28,7 +28,7 @@ ApplicationContext bf = new ClassPathXmlApplicationContext("applicationContext.x
 ### DefaultListableBeanFactory
 DefaultListableBeanFactory是整个bean加载的核心部分，是Spring注册及加载bean的默认实现。下面看看DefaultListableBeanFactory的层次结构图。
 
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-Ro7s1PeW-1596181500749)(https://note.youdao.com/yws/api/personal/file/A91C9C5BB33B48A4B501435C157FFD99?method=download&shareKey=2b9a7ef7fd42d051fec83fe3f5eef7a8)]
+![图片1](https://note.youdao.com/yws/api/personal/file/A91C9C5BB33B48A4B501435C157FFD99?method=download&shareKey=2b9a7ef7fd42d051fec83fe3f5eef7a8)
 从上往下开始介绍各个类以及接口的作用：
 - AliasRegistry（接口）：alias指的是bean的别名，而aliasRegistry定义了对alias的增删改查等操作。
 - SimpleAliasRegistry（类）：主要使用map作为alias的缓存，并对接口AliasRegistry进行实现。
@@ -48,7 +48,7 @@ DefaultListableBeanFactory是整个bean加载的核心部分，是Spring注册�
 
 ### XmlBeanDefinitionReader
 XML配置文件的读取是Spring中最重要的功能，因为Spring的大部分功能都是以配置作为切入点的，XmlBeanDefinitionReader实现了对资源文件的读取、解析以及注册。先看一下XmlBeanDefinitionReader的层次结构图。
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-slboUPHM-1596181500755)(https://note.youdao.com/yws/api/personal/file/477FF4A409A94CBB8CF9A05A16D8F7D4?method=download&shareKey=de7d24b623d4c5bb7e65bb440438e271)]
+![图片2](https://note.youdao.com/yws/api/personal/file/477FF4A409A94CBB8CF9A05A16D8F7D4?method=download&shareKey=de7d24b623d4c5bb7e65bb440438e271)
 
 - EnvironmentCapable（接口）：定义获取Environment方法，Environment代表了配置文件。
 - BeanDefinitionReader（接口）：主要定义资源文件读取并转换为BeanDefinition的各个功能。
@@ -94,17 +94,17 @@ Person{name='Bruis', age=23}
 
 
 
-**==前方高能==**
+** 前方高能 **
 
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-ZBUV9DEW-1596181500779)(https://note.youdao.com/yws/api/personal/file/219238FD61C146C99E137E303D52EA66?method=download&shareKey=d5e5aaa1e9fa782eeb056b89119c3565)]
+![图片3](https://note.youdao.com/yws/api/personal/file/219238FD61C146C99E137E303D52EA66?method=download&shareKey=d5e5aaa1e9fa782eeb056b89119c3565)
 
 通过在断点debug，跟踪程序运行。
 
-==1== SpringMain.class
+1. SpringMain.class
 ```
 ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 ```
-==2== ClassPathXmlApplicationContext.class
+2. ClassPathXmlApplicationContext.class
 ```
 public ClassPathXmlApplicationContext(String configLocation) throws BeansException {
     this(new String[]{configLocation}, true, (ApplicationContext)null);
@@ -122,7 +122,7 @@ public ClassPathXmlApplicationContext(String[] configLocations, boolean refresh,
     }
 }
 ```
-==3== AbstractRefreshableConfigApplicationContext.class
+3. AbstractRefreshableConfigApplicationContext.class
 ```
 //给configLocations字符串数组设置值，支持多个配置文件已数组方式同时传入。
 public void setConfigLocations(String... locations) {
@@ -146,9 +146,9 @@ public void setConfigLocations(String... locations) {
 
 下面我们来重点看看refresh()过程。
 
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-i7GGvXbS-1596181500788)(https://note.youdao.com/yws/api/personal/file/76AE8FEDAFF54B6881C336B056AC5B0A?method=download&shareKey=430f5263180efd8467df6e6434456f3d)]
+![Image](https://note.youdao.com/yws/api/personal/file/76AE8FEDAFF54B6881C336B056AC5B0A?method=download&shareKey=430f5263180efd8467df6e6434456f3d)
 
-==1== AbstractApplicationContext.class
+1. AbstractApplicationContext.class
 ```
 /*
     简单来说，Spring容器的初始化时右refresh()方法来启动的，这个方法标志着IOC容器的正式启动。具体来说，这里的启动包括了BeanDefinition和Resource的定位、载入和注册三个基本过程。
@@ -197,7 +197,7 @@ public void refresh() throws BeansException, IllegalStateException {
 	}
 }
 ```
-==2== AbstractRefreshableApplicationContext.class
+2. AbstractRefreshableApplicationContext.class
 ```
 /*
     通知子类刷新内部bean工厂，初始化BeanFactory并进行XML文件的解析、读取。obtain就是指获得的含义，这个方法obtaiinFreshBeanFactory正是实现BeanFactory的地方，也就是经过这个方法，ApplicationContext就已经拥有了BeanFactory的全部功能（也就是BeanFactory包含在了Spring容器里了）。
@@ -239,13 +239,13 @@ protected final void refreshBeanFactory() throws BeansException {
 }
 ```
 这里先看看上面代码的loadBeanDefinitions()方法运行完后的结果
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-rct2oyUr-1596181500797)(https://note.youdao.com/yws/api/personal/file/59FBCD3CC1B54136A05309EA6B88FEB3?method=download&shareKey=80bdcfcbde0362b73eb633390c5b1042)]
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-GQGdWL16-1596181500806)(https://note.youdao.com/yws/api/personal/file/E258907852284A6F93A2C305319EBB64?method=download&shareKey=7e1dba96d3b53ca9b6af017552f8fd31)]
+![图片](https://note.youdao.com/yws/api/personal/file/59FBCD3CC1B54136A05309EA6B88FEB3?method=download&shareKey=80bdcfcbde0362b73eb633390c5b1042)
+![图片](https://note.youdao.com/yws/api/personal/file/E258907852284A6F93A2C305319EBB64?method=download&shareKey=7e1dba96d3b53ca9b6af017552f8fd31)
 从图中可以知道，loadBeanDefinitions()方法运行完后，在beanFactory变量里面存放着一个ConcurrentHashMap变量，用于存放着person这个KV键值对，Key为person，Value为一个ArrayList的变量，里面存放着person的两个属性：age、name。
 
 那么，person的属性是怎么被封装到beanFactory里面的呢？请看下面的源码解析。
 
-==3== AbstractXmlApplicationContext.class
+3. AbstractXmlApplicationContext.class
 ```
 protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
     //为给定的BeanFactory创建一个新的XmlBeanDefinitionReader
@@ -271,7 +271,7 @@ protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansE
 ```
 首先在refreshBeanFactory()方法中已经初始化了DefaultListableBeanFactory，对于读取XML配置文件，还需要使用XmlBeanDefinitionReader。所以在上述loadBeanDefinitions()中就需要初始化XmlBeanDefinitionReader。在DefaultListableBeanFactory和XmlBeanDefinitionReader后就可以进行配置文件的读取了。要注意的地方时，在XmlBeanDefinitionReader初始化时就已经把DefaultListableBeanFactory给注册进去了，所以在XmlBeanDefinitionReader读取的BeanDefinition都会注册到DefaultListableBeanFactory中，也就是经过上述的loadingBeanDefinitions()，类型DefaultListableBeanFactory的变量beanFactory就已经包含了所有**解析好的配置**了。
 
-==4== AbstractBeanDefinitionReader.class
+4. AbstractBeanDefinitionReader.class
 ```
 @Override
 public int loadBeanDefinitions(String... locations) throws BeanDefinitionStoreException {
@@ -320,7 +320,7 @@ public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualRe
 	return count;
 }
 ```
-==5== PathMatchingResourcePatternResolver.class
+5. PathMatchingResourcePatternResolver.class
 ```
 @Override
 public Resource[] getResources(String locationPattern) throws IOException {
@@ -351,7 +351,7 @@ public Resource[] getResources(String locationPattern) throws IOException {
 	}
 }
 ```
-==6== XmlBeanDefinitionReader.class
+6. XmlBeanDefinitionReader.class
 ```
 /*
     从XML配置文件中获取bean定义信息
@@ -409,9 +409,9 @@ protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
 
 下面，继续深入registerBeanDefinitions方法。
 
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-F4jy1nu2-1596181500811)(https://note.youdao.com/yws/api/personal/file/861658D89B0D4B48A7ED56B554CF3028?method=download&shareKey=c3bc974e751495bac74d9ac9ec56cb75)]
+![图片](https://note.youdao.com/yws/api/personal/file/861658D89B0D4B48A7ED56B554CF3028?method=download&shareKey=c3bc974e751495bac74d9ac9ec56cb75)
 
-==1== XmlBeanDefinitionReader.class 
+1. XmlBeanDefinitionReader.class 
 ```
 /*
     注册给定DOM文档中包含的bean定义
@@ -423,7 +423,7 @@ public int registerBeanDefinitions(Document doc, Resource resource) throws BeanD
     return this.getRegistry().getBeanDefinitionCount() - countBefore;
 }
 ```
-==2== DefaultBeanDefinitionDocumentReader.class
+2. DefaultBeanDefinitionDocumentReader.class
 ```
 /*
     此实现根据“spring-beans”XSD解析bean定义
@@ -506,7 +506,7 @@ protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate d
 
 ```
 
-==2== BeanDefinitionParserDelegate.class
+2. BeanDefinitionParserDelegate.class
 ```
 /*
     解析bean定义本身，而不考虑名称或别名，如果解析期间出错则返回null。
@@ -636,8 +636,8 @@ public void parsePropertyElement(Element ele, BeanDefinition bd) {
 }
 
 ```
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-GY6XA8St-1596181500816)(https://note.youdao.com/yws/api/personal/file/75CAC9D21AD64BAB89B0D25C8BBE7598?method=download&shareKey=89e73cf46fe18b1b85aecf8d58006f8e)]
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-CoQwCoX9-1596181500828)(https://note.youdao.com/yws/api/personal/file/CF65BB80EB934EBEBA49466CFAB261A0?method=download&shareKey=8b9f0078cf5a3171dfd69d00d9ba55f6)]
+![Images](https://note.youdao.com/yws/api/personal/file/75CAC9D21AD64BAB89B0D25C8BBE7598?method=download&shareKey=89e73cf46fe18b1b85aecf8d58006f8e)
+![Images](https://note.youdao.com/yws/api/personal/file/CF65BB80EB934EBEBA49466CFAB261A0?method=download&shareKey=8b9f0078cf5a3171dfd69d00d9ba55f6)
 
 然后，就会一路返回到refresh()方法里的加载bean定义信息的方法——loadBeanDefinitions()，此时beanFactory里面就会存在一个带有KV对的ConcurrentHashMap，而这个beanFactory会存放在Spring容器里面。
 ```
@@ -648,8 +648,8 @@ customizeBeanFactory(beanFactory);
 loadBeanDefinitions(beanFactory);
 ```
 再看看DefaultListableBeanFactory里面的内容
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-U1YLvZqH-1596181500835)(https://note.youdao.com/yws/api/personal/file/59FBCD3CC1B54136A05309EA6B88FEB3?method=download&shareKey=80bdcfcbde0362b73eb633390c5b1042)]
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-Sm1vEEPj-1596181500841)(https://note.youdao.com/yws/api/personal/file/E258907852284A6F93A2C305319EBB64?method=download&shareKey=7e1dba96d3b53ca9b6af017552f8fd31)]
+![Images](https://note.youdao.com/yws/api/personal/file/59FBCD3CC1B54136A05309EA6B88FEB3?method=download&shareKey=80bdcfcbde0362b73eb633390c5b1042)
+![Images](https://note.youdao.com/yws/api/personal/file/E258907852284A6F93A2C305319EBB64?method=download&shareKey=7e1dba96d3b53ca9b6af017552f8fd31)
 
 上面的过程，就已经完成了Spring容器的初始化过程，相信读者也已经对Spring容器的初始化有了一个大致的了解。下面总结一下Spring容器的初始化：
 - 第一个过程是Resource定位过程。这个Resource定位过程指的是BeanDefinition的资源定位，它由ResourceLoader通过统一的Resource接口来完成，这个Resource对各种形式的BeanDefinition的使用都提供了统一接口。这个定位过程类似于容器寻找数据的过程，就像使用水桶装水先要把水找到一样。
@@ -670,9 +670,9 @@ bean的创建和初始化过程是在refresh方法里的invokeBeanFactoryPostPro
 - 当容器关闭时，调用Bean的销毁方法
 
 下面先看看创建bean和初始化bean的时序图。
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-d72Brshx-1596181500848)(https://note.youdao.com/yws/api/personal/file/8B415614A97D45B481925159264C344F?method=download&shareKey=1083828cfcea581b0aa5cae56e3f3090)]
+![Images](https://note.youdao.com/yws/api/personal/file/8B415614A97D45B481925159264C344F?method=download&shareKey=1083828cfcea581b0aa5cae56e3f3090)
 
-==1== AbstractApplicationContext.class
+1. AbstractApplicationContext.class
 ```
 public void refresh() throws BeansException, IllegalStateException {
     ...
@@ -718,7 +718,7 @@ protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory b
 ```
 这里的懒加载的意思，指的是bean单例不是在Spring容器初始化的时候就创建的，而是在要使用该bean的时候，才会创建该bean。
 
-==2== DefaultListableBeanFactory.class
+2. DefaultListableBeanFactory.class
 ```
 // 实例剩余的（非懒加载）的单例
 @Override
@@ -779,7 +779,7 @@ public void preInstantiateSingletons() throws BeansException {
 }
 ```
 
-==3== AbstractBeanFactory.class 
+3. AbstractBeanFactory.class 
 ```
 protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
@@ -894,7 +894,7 @@ protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredTy
 	}
 ```
 
-==4== DefaultSingletonBeanRegistry.class
+4. DefaultSingletonBeanRegistry.class
 ```
 /*
     尝试从缓存中获取单例对象，如果缓存中有该单例对象，并且该对象正在被创建，则从缓存中获取。
@@ -967,9 +967,9 @@ public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 ```
 
 无图无真相：
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-Fbdqjrix-1596181500853)(https://note.youdao.com/yws/api/personal/file/4C30C0DA143E422FBD27E50AE71AC179?method=download&shareKey=2f4dff65df0e9761ede47d26782dd977)]
+![Images](https://note.youdao.com/yws/api/personal/file/4C30C0DA143E422FBD27E50AE71AC179?method=download&shareKey=2f4dff65df0e9761ede47d26782dd977)
 
-==5== AbstractAutowireCapableBeanFactory.class
+5. AbstractAutowireCapableBeanFactory.class
 ```
 /*
     该类的中心方法：创建bean实例，实例化bean实例，应用bean的后置处理器
@@ -1253,7 +1253,7 @@ protected void applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrap
 经过上面的分析，就知道真正的对bean赋值填充是在AbstractAutowireCapableBeanFactory.class类里的applyPropertyValues方法里的，并且是通过对原属性值进行了一次深拷贝，然后将深拷贝后的属性值填充到bean里的。
 
 ## 在web容器中初始化spring容器
-[深入Spring源码系列（二）——深入Spring容器，通过源码阅读和时序图来彻底弄懂Spring容器（下）](https://blog.csdn.net/CoderBruis/article/details/86505582)
+[深入Spring源码系列（二）——深入Spring容器，通过源码阅读和时序图来彻底弄懂Spring容器（下）](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/Spring/%E6%B7%B1%E5%85%A5Spring%E6%BA%90%E7%A0%81%E7%B3%BB%E5%88%97%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%B7%B1%E5%85%A5Spring%E5%AE%B9%E5%99%A8%EF%BC%8C%E9%80%9A%E8%BF%87%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E6%97%B6%E5%BA%8F%E5%9B%BE%E6%9D%A5%E5%BD%BB%E5%BA%95%E5%BC%84%E6%87%82Spring%E5%AE%B9%E5%99%A8%EF%BC%88%E4%B8%8B%EF%BC%89.md)
 
 
 ## 参考
