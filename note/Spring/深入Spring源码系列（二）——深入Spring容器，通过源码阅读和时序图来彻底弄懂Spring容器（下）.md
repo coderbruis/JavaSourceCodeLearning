@@ -79,7 +79,7 @@ SpringIOC容器是如何在Web环境中被加载并起作用的？SpringIOC容�
 IOC容器的启动过程就是建立Spring上下文的过程，该上下文是与ServletContext相伴而生的，同时也是IOC容器在Web应用环境中的具体表现之一。由ContextLoaderListener启动的上下文为根上下文。在根上下文的基础上，还有一个与Web MVC相关的上下文应用来保存控制器（DispatcherServlet）需要的MVC对象，**作为根上下文的子上下文**，构成一个层次化的上下文体系，这个与Web MVC相关的上下文——WebApplicationContext。在Web容器中启动Spring应用程序时，首先建立根上下文，然后建立这个上下文体系，这个上下文体系的建立是由ContextLoader来完成的。简单点说，ContextLoaderListener的作用就是启动Web容器时，自动装配ApplicationContext的配置信息。
 
 先看看Web程序启动到SpringIOC容器创建和初始化的整个过程。
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-1df3mrUq-1596181541865)(https://note.youdao.com/yws/api/personal/file/9755412D703C4DE287B26AF2396E57BD?method=download&shareKey=52783ceb34f405ad47140c22da34275e)]
+![image](https://note.youdao.com/yws/api/personal/file/9755412D703C4DE287B26AF2396E57BD?method=download&shareKey=52783ceb34f405ad47140c22da34275e)
 
 结合着时序图，再去调试源码，思路会清晰很多。
 
@@ -272,7 +272,7 @@ protected Class<?> determineContextClass(ServletContext servletContext) {
 ```
 
 下面看看默认的IOC容器是什么。有图有真相：
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-9m6BDvfX-1596181541884)(https://note.youdao.com/yws/api/personal/file/AB1007BC2A7549D7898417D6231AE4E3?method=download&shareKey=e851d344aedd461f319dba3b8e2c6fe8)]
+![image](https://note.youdao.com/yws/api/personal/file/AB1007BC2A7549D7898417D6231AE4E3?method=download&shareKey=e851d344aedd461f319dba3b8e2c6fe8)
 
 ```
 protected void configureAndRefreshWebApplicationContext(ConfigurableWebApplicationContext wac, ServletContext sc) {
@@ -308,5 +308,9 @@ protected void configureAndRefreshWebApplicationContext(ConfigurableWebApplicati
 
 ## 总结
 
-对于Spring承载的Web应用而言，可以指定在Web应用程序启动时载入IOC容器（WebApplicationContext）。这个载入的功能是通过ContextLoaderListener来实现的，它是一个Web容器的监听器，而ContextLoaderListener又通过ContextLoader来完成实际的WebApplicationContext的初始化，也就是IOC的初始化。换句话说，ContextLoader就像Spring应用在Web容器中的启动器。
+对于Spring承载的Web应用而言，可以指定在Web应用程序启动时载入IOC容器（WebApplicationContext）。
+
+这个载入的功能是通过ContextLoaderListener来实现的，它是一个Web容器的监听器，而ContextLoaderListener又通过ContextLoader来完成实际的WebApplicationContext的初始化，也就是IOC的初始化。
+
+换句话说，ContextLoader就像Spring应用在Web容器中的启动器。
 
