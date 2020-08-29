@@ -1,3 +1,4 @@
+![JavaSourceCodeLearningImage](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/JavaSourceCodeLearningImage.png)
 
 <p align="center">
   <a href="https://www.oracle.com/cn/java/technologies/javase/javase-jdk8-downloads.html">
