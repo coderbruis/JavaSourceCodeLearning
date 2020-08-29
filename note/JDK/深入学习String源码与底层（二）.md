@@ -497,7 +497,7 @@ list集合里就会添加进空字符串""
 ```
 
 对于入参limit，可以总结一下为：
-1. limit > 0，split()方法不进行拆分，最多把字符串拆分成limit个部分。
+1. limit > 0，split()方法最多把字符串拆分成limit个部分。
 2. limit = 0，split()方法会拆分匹配到的最后一位regex。
 3. limit < 0，split()方法会根据regex匹配到的最后一位，如果最后一位为regex，则多添加一位空字符串；如果不是则添加regex到字符串末尾的子字符串。
 
