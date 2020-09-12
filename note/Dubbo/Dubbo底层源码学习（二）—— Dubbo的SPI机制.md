@@ -50,15 +50,18 @@ public static void main(String[] args) (
 
 在JDK SPI中，是通过ServiceLoader来获取所有接口实现的。
 
+最常见的JDK SPI就是com.mysql.cj.jdbc.Driver 接口，它的实现类是有用户通过配置文件来设定的，Driver接口就是一个扩展点。
+
 ### 2. Dubbo SPI
 
-Dubbo SPI没有直接使用Java SPL而是在它的思想上又做了一定的改进，形成了一套自己的配置规范和特性。同时，Dubbo SPI又兼容Java SPL服务在启动的时候，Dubbo就会查找这些扩展点的所有实现
+Dubbo SPI没有直接使用Java SPI而是在它的思想上又做了一定的改进，形成了一套自己的配置规范和特性。同时，Dubbo SPI又兼容Java SPI服务在启动的时候，Dubbo就会查找这些扩展点的所有实现
 
 Dubbo SPI之于JDK SPI，做到了三点优化：
 1. 不同于JDK SPI会一次性实例化扩展点所有实现，因为JDK SPI有扩展实现，则初始化会很耗时，并且如果没有用上也要加载，则会很浪费资源。而Dubbo SPI只会加载扩展点，而不会对其进行初始化，并且Dubbo SPI中
 会根据不同的实现类来缓存到内存中，性能上得到了很大的优化。
-2. JDK SPI如果对扩展加载失败，则连扩展的名称都获取不到，并且失败原因会被吃掉，而Dubbo SPI则会将异常堆栈保留下来，方便后序
-对其异常信息进行分析。
+2. JDK SPI如果对扩展加载失败，则连扩展的名称都获取不到，并且失败原因会被吃掉，而Dubbo SPI则会将异常堆栈保留下来，方便后序对其异常信息进行分析。
 3. Dubbo SPI增加了对IOC和AOP的支持，在Dubbo中，一个扩展点可以通过setter来注入到其他扩展点中。
+
+
 
 未完待续....
