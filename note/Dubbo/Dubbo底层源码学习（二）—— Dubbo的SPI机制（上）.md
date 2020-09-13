@@ -86,7 +86,7 @@ dubbo=org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol
 ```
 
 key表示的是扩展点名称，而value表示的是扩展点的实现类的全限定类名。另外，SPI配置文件名称就是扩展点实现类的全限定类名。
-![Dubbo-SPI-01](http://note.youdao.com/yws/res/28338/6061E217061B4FEBB4A05588B7DD42BC)
+![Dubbo-SPI-01](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/dubbo-spi-01.png)
 
 那么，扩展点及其实现类以及存放在SPI文件中了，那么Dubbo应用程序该如何将其加载进行JVM内存中呢？
 
@@ -95,9 +95,9 @@ key表示的是扩展点名称，而value表示的是扩展点的实现类的全
 ExtensionLoader即扩展点加载器，它是Dubbo SPI的核心，负责加载扩展点即扩展点实现类，先看下其内部重要的几个成员变量：
 
 
-![Dubbo-SPI-02](http://note.youdao.com/yws/res/28352/F560C187FC8D4B7EB9F54DCE4103A5EB)
+![Dubbo-SPI-02](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/dubbo-spi-02.png)
 
-![Dubbo-SPI-03](http://note.youdao.com/yws/res/28354/6811B40CCC184FC1B2B2C5E557D6D534)
+![Dubbo-SPI-03](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/dubbo-spi-03.png)
 
 这里的扩展点加载策略有三种：
 - DubboInternalLoadingStrategy（加载内部的SPI）
@@ -106,7 +106,7 @@ ExtensionLoader即扩展点加载器，它是Dubbo SPI的核心，负责加载�
 
 并且其内部默认优先级为：DubboInternalLoadingStrategy > DubboLoadingStrategy > ServiceLoadingStrategy
 
-![image](http://note.youdao.com/yws/res/28367/9F45ECAA6A1F418582172C41137FB3C9)
+![Dubbo-SPI-04](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/dubbo-spi-04.png)
 
 上图清楚的展示了LoadingStrategy接口及其实现类的关系。LoadingStrategy继承了Prioritized，因而其实现类会有优先级之分，而Dubbo默认是使用的DubboInternalLoadingStrategy，查看其三个类的源码：
 
@@ -210,3 +210,5 @@ public class ServicesLoadingStrategy implements LoadingStrategy {
 所以在Dubbo中，默认的优先级为：DubboInternalLoadingStrategy > DubboLoadingStrategy > ServiceLoadingStrategy
 
 即优先加载：META-INF/dubbo/internal目录下的SPI配置文件。
+
+> 由于篇幅过长，关于Dubbo SPI机制的原理分析将分为上、中、下三篇
