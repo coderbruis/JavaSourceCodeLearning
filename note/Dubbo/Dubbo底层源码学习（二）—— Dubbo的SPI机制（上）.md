@@ -215,4 +215,6 @@ public class ServicesLoadingStrategy implements LoadingStrategy {
 
 即优先加载：META-INF/dubbo/internal目录下的SPI配置文件。
 
+要用好Dubbo源码中的Test目录中各种场景的test，在通读完整篇文章后再调用Test代码，然后debug一步一步调试，能够加深源码底层调用逻辑的理解。SPI机制的中篇以及下篇会通过大量的Test测试用例来进行底层逻辑分析讲解。
+
 > 由于篇幅过长，关于Dubbo SPI机制的原理分析将分为上、中、下三篇
