@@ -58,6 +58,11 @@ public static void main(String[] args) (
 
 最常见的JDK SPI就是com.mysql.cj.jdbc.Driver 接口，它的实现类是有用户通过配置文件来设定的，Driver接口就是一个扩展点。
 
+
+![jdk-spi](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/jdk-spi.png)
+
+![jdk-spi-driver](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/jdk-spi-driver.png)
+
 ### 2. Dubbo SPI
 
 Dubbo SPI没有直接使用Java SPI而是在它的思想上又做了一定的改进，形成了一套自己的配置规范和特性。同时，Dubbo SPI又兼容Java SPI服务在启动的时候，Dubbo就会查找这些扩展点的所有实现。
