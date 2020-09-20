@@ -1,6 +1,6 @@
 ## 前言
 
-想要深入学习Dubbo，最好的方式就是阅读并调用Dubbo源码。接下来先来动手搭建一个Dubbo源码。
+想要深入学习Dubbo，最好的方式就是阅读并调用Dubbo源码，接下来先来动手搭建一个Dubbo源码环境。
 
 ## 正文
 
@@ -14,10 +14,10 @@
         git clone git@github.com:xxxxxxxx/dubbo.git 
     ```
     
-2. 使用命令：git branch v2.7.7。 切换到分支2.7.7。
+2. 使用命令：git branch v2.7.8。 切换到分支2.7.8。
 
     ```
-        git checkout -b dubbo-2.7.7 dubbo-2.7.7 
+        git checkout -b dubbo-2.7.8 dubbo-2.7.8
     ```
 
 3. 导入方式（IDEA导入方式）
