@@ -58,7 +58,56 @@
 
 ### 2. ExtensionLoader的工作原理
 
-> 由于在本人的github仓库中fork的Dubbo官方源码中，有一SourceCode-of-Translation分支已经标注有详细的注释，所以这里就不粘贴出来了
+> 由于在本人的github仓库中fork了Dubbo官方源码，有一SourceCode-of-Translation分支已经标注有详细的注释，所以这里就不粘贴出来了
 
 在ExtensionLoader中，有三个逻辑入口，分别为getExtension、getAdaptiveExtension、getActivateExtension，分别是获取
 普通扩展类、获取自适应扩展类、获取自动激活的扩展类。
+
+接下来的原理分析通过Dubbo源码中的test包下的代码来进行说明。（想学好开源框架，要好好利用开源框架中各种Test用例）
+
+```
+    @Test
+    public void test_getDefaultExtension() throws Exception {
+        SimpleExt ext = getExtensionLoader(SimpleExt.class).getDefaultExtension();
+        assertThat(ext, instanceOf(SimpleExtImpl1.class));
+
+        String name = getExtensionLoader(SimpleExt.class).getDefaultExtensionName();
+        assertEquals("impl1", name);
+    }
+
+```
+
+分别来看下SimpleExt接口定义以及它的SPI配置文件内容。
+
+``` 
+@SPI("impl1")
+public interface SimpleExt {
+    // @Adaptive example, do not specify a explicit key.
+    @Adaptive
+    String echo(URL url, String s);
+
+    @Adaptive({"key1", "key2"})
+    String yell(URL url, String s);
+
+    // no @Adaptive
+    String bang(URL url, int i);
+}
+```
+
+```
+# Comment 1
+impl1=org.apache.dubbo.common.extension.ext1.impl.SimpleExtImpl1#Hello World
+impl2=org.apache.dubbo.common.extension.ext1.impl.SimpleExtImpl2  # Comment 2
+   impl3=org.apache.dubbo.common.extension.ext1.impl.SimpleExtImpl3 # with head space
+```
+
+首先SimpleExt接口由@SPI注解修饰，并且value值为impl1，由此可知SimpleExt的扩展点名称为impl1，扩展点实现类限定名称为org.apache.dubbo.common.extension.ext1.impl.SimpleExtImpl1
+
+但是程序内部是如何运行的呢？
+
+我用一张图来概括test_getDefaultExtension()方法的整个调用链过程。
+
+![Dubbo-SPI-Test](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/Dubbo-SPI-Test.png)
+
+
+
