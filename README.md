@@ -117,7 +117,7 @@ SpringCloud源码
     - Dubbo底层源码学习（三）—— Dubbo的注册中心
     - Dubbo底层源码学习（四）—— Dubbo的注册中心缓存机制
     - Dubbo底层源码学习（五）—— Dubbo的注册中心重试机制
-    - Dubbo底层源码学习（六）—— Dubbo的服务暴露
+    - [Dubbo底层源码学习（六）()—— Dubbo的服务暴露](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/Dubbo/Dubbo%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2.md)
     - Dubbo底层源码学习（七）—— Dubbo的服务消费
  
   持续更新中...
