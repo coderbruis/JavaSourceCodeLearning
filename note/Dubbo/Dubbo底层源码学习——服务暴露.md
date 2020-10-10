@@ -92,14 +92,41 @@ public class Transporter$Adaptive implements org.apache.dubbo.remoting.Transport
 }
 ```
 
-对于Invoker对象是JavassistProxyFactory的匿名内部类，如下图所示
+对于JavassistProxyFactory对象中Invoker类型的匿名内部类，类结构如下图所示
 ![export01](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/export01.png)
+
+JavassistProxyFactory代码如下：
+```
+public class JavassistProxyFactory extends AbstractProxyFactory {
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getProxy(Invoker<T> invoker, Class<?>[] interfaces) {
+        return (T) Proxy.getProxy(interfaces).newInstance(new InvokerInvocationHandler(invoker));
+    }
+
+    @Override
+    public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) {
+        // TODO Wrapper cannot handle this scenario correctly: the classname contains '$'
+        final Wrapper wrapper = Wrapper.getWrapper(proxy.getClass().getName().indexOf('$') < 0 ? proxy.getClass() : type);
+        return new AbstractProxyInvoker<T>(proxy, type, url) {
+            @Override
+            protected Object doInvoke(T proxy, String methodName,
+                                      Class<?>[] parameterTypes,
+                                      Object[] arguments) throws Throwable {
+                return wrapper.invokeMethod(proxy, methodName, parameterTypes, arguments);
+            }
+        };
+    }
+
+}
+```
 
 
 - testDubboProtocol()调用流程
 
-1. 首先protocol和proxy变量分别在DubboProtocolTest.java类加载过程时就已经分别加载好了，这里的Protocol和ProxyFactory对象都生成的是代理对象，分别为Protocol$Adaptive和ProxyFactory$Adaptive对象，对象类代码在上面；
-2. 首先调用proxy#getInvoker()，调用的实际是ProxyFactory$Adaptive对象的getInvoker()方法，在上图可以看到具体逻辑，其方法逻辑中需要去ProxyFactory对象的扩展点实现类，经过调试ProxyFactory对象的扩展点实现类为StubProxyFactoryWrapper，最终会调用到JavassistProxyFactory的getInvoker()方法，它会最终生成一个AbstractProxyInvoker()匿名类对象，所以调试的时候可以发现invoker的引用是JavassistProxyFactory$1；
+1. 首先protocol和proxy变量分别在DubboProtocolTest.java类加载过程时就已经分别加载好了，这里的Protocol和ProxyFactory对象都生成的是代理对象，分别为Protocol$Adaptive和ProxyFactory$Adaptive对象，动态代理处的代码在上面展示了；
+2. 首先调用proxy#getInvoker()，调用的实际是ProxyFactory$Adaptive代理对象的getInvoker()方法，在上图可以看到具体逻辑，其方法逻辑中需要去获取ProxyFactory对象的扩展点实现类，经过调试ProxyFactory对象的扩展点实现类为StubProxyFactoryWrapper，最终会调用到JavassistProxyFactory的getInvoker()方法，它会最终生成一个AbstractProxyInvoker()匿名类对象，所以调试的时候可以发现invoker的引用是JavassistProxyFactory$1；
 3. 获取到invoker之后，就传入到Protocol的扩展点实现类中去调用export()方法，由上图的Protocol$Adaptive可以知道，在export()方法中会去生成Protocol的扩展点实现类，这里的实现类是ProtocolFilterWrapper（这里为什么是这个实现类呢？去调研一下）。经过代理类的传递包装，最终来到了ProtocolFilterWrapper#export()方法；
 4. 接着就是调用ProtocolFilterWrapper#buildInvocation()方法，构建调用链。就是先去获取Filter的扩展点实现类集合对象，然后倒叙遍历该集合对象然后将invoker对象和最后一个Filter对象封装为另一个Invoker，然后再继续传递到和上一个Filter对象继续封装成Invoker，以此往复封装。最终的结果就是将传入的invoker对象封装到了最后一个Filter之后，请求进来之后需要调用所有的Filter过后才会调用invoker对象，形成了一个Invoker链；
 
