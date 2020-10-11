@@ -59,7 +59,7 @@ public class ProxyFactory$Adaptive implements org.apache.dubbo.rpc.ProxyFactory 
 		org.apache.dubbo.common.URL url = arg2;
 		String extName = url.getParameter("proxy", "javassist");
 		if(extName == null) throw new IllegalStateException("Failed to get extension (org.apache.dubbo.rpc.ProxyFactory) name from url (" + url.toString() + ") use keys([proxy])");
-		// 这里获取到的ProxyFactory的扩展点是StubProxyFactoryWrapper，StubProxyFactoryWrapper是ProxyFactory的实现类，@SPI("javassist")
+		// 这里获取到的ProxyFactory的扩展点是StubProxyFactoryWrapper，StubProxyFactoryWrapper是ProxyFactory的实现类，由于ProxyFactory注解@SPI("javassist")，所以extName取javassist值
 		org.apache.dubbo.rpc.ProxyFactory extension = (org.apache.dubbo.rpc.ProxyFactory)ExtensionLoader.getExtensionLoader(org.apache.dubbo.rpc.ProxyFactory.class).getExtension(extName);
 		// 所以去调用了StubProxyFactoryWrapper#getInvoker()方法，在该方法中调用的是JavassistProxyFactory的getInvoker方法，最终实际
 		// 返回的是一个JavassistProxyFactory的一个匿名内部类：AbstractProxyInvoker
