@@ -25,7 +25,43 @@ Dubbo SPI的核心逻辑几乎都封装在ExtensionLoader之中，ExtensionLoade
 
 下面展示了ExtensionLoader最常用的使用方式：
 ```
-SimpleExt ext = getExtensionLoader(SimpleExt.class).getDefaultExtension();
+SimpleExt ext = ExtensionLoader.getExtensionLoader(SimpleExt.class).getDefaultExtension();
+```
+
+首先时调用ExtensionLoader#getExtensionLoader(SimpleExt.class)，来获取SimpleExt类型的ExtensionLoader。查看ExtensionLoader源码如下：
+
+```
+    public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
+        if (type == null) {
+            throw new IllegalArgumentException("Extension type == null");
+        }
+        if (!type.isInterface()) {
+            throw new IllegalArgumentException("Extension type (" + type + ") is not an interface!");
+        }
+        if (!withExtensionAnnotation(type)) {
+            throw new IllegalArgumentException("Extension type (" + type +
+                    ") is not an extension, because it is NOT annotated with @" + SPI.class.getSimpleName() + "!");
+        }
+
+        ExtensionLoader<T> loader = (ExtensionLoader<T>) EXTENSION_LOADERS.get(type);
+        if (loader == null) {
+            // 如果初始指定的EXTENSION_LOADER为空值，则新new一个ExtensionLoader对象存放至其中。要注意ExtensionLoader的构造方法内容！
+            EXTENSION_LOADERS.putIfAbsent(type, new ExtensionLoader<T>(type));
+            loader = (ExtensionLoader<T>) EXTENSION_LOADERS.get(type);
+        }
+        return loader;
+    }
+```
+getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经缓存了该类型的扩展点加载器，如果没有则new一个该类型的ExtensionLoader并添加进EXTENSION_LOADERS中。但需要注意的是ExtensionLoader的构造方法
+中，是会先创建默认的ExtensionFactory类型的ExtensionLoader对象，然后调用getAdaptiveExtension()方法创建适配类型的扩展点实现类。
+
+```
+    private ExtensionLoader(Class<?> type) {
+        this.type = type;
+        // 从此处可以知道，对于默认的ExtensionFactory.class来说，是没有objectFactory熟悉对象值的
+        // 如果type不为ExtensionFactory类型的，则会创建一个ExtensionFactory的适配工厂来成为objectFactory对象属性
+        objectFactory = (type == ExtensionFactory.class ? null : ExtensionLoader.getExtensionLoader(ExtensionFactory.class).getAdaptiveExtension());
+    }
 ```
 
 
