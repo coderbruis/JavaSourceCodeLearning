@@ -64,7 +64,152 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
     }
 ```
 
+从dubbo-common模块下的org.apache.dubbo.common.extension.ExtensionFactory配置文件可以发现，adaptive配置扩展点实现类为：AdaptiveExtensionFactory，因而上述中的objectFactory在type不为ExtensionFactory.class类型时，
+被赋值为AdaptiveExtensionFactory。
 
+下面看下getExtensionClass()方法的逻辑
+```
+    private Class<?> getExtensionClass(String name) {
+        if (type == null) {
+            throw new IllegalArgumentException("Extension type == null");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("Extension name == null");
+        }
+        // 从获取到的Map集合中取出key为name类型的扩展点实现类
+        return getExtensionClasses().get(name);
+    }
+```
+
+```
+    private Map<String, Class<?>> getExtensionClasses() {
+        Map<String, Class<?>> classes = cachedClasses.get();
+        // 双重检测，防止并发环境下指令重排序，cachedClasses是static类型
+        if (classes == null) {
+            synchronized (cachedClasses) {
+                classes = cachedClasses.get();
+                if (classes == null) {
+                    // 加载扩展点实现类
+                    classes = loadExtensionClasses();
+                    cachedClasses.set(classes);
+                }
+            }
+        }
+        return classes;
+    }
+```
+
+```
+    private Map<String, Class<?>> loadExtensionClasses() {
+        // 缓存默认的扩展点名称，这里会去读取@SPI注解
+        cacheDefaultExtensionName();
+
+        Map<String, Class<?>> extensionClasses = new HashMap<>();
+
+        for (LoadingStrategy strategy : strategies) {
+            // 加载SPI配置文件中的扩展点实现类
+            loadDirectory(extensionClasses, strategy.directory(), type.getName(), strategy.preferExtensionClassLoader(), strategy.overridden(), strategy.excludedPackages());
+            loadDirectory(extensionClasses, strategy.directory(), type.getName().replace("org.apache", "com.alibaba"), strategy.preferExtensionClassLoader(), strategy.overridden(), strategy.excludedPackages());
+        }
+
+        // 这里只会返回非Adaptive和非Wrapper类型的扩展点实现类Class，因为Adaptive会被缓存到cachedAdaptiveClasses缓存中，儿Wrapper类型的类会被缓存到cachedWrapperClasses缓存中。
+        return extensionClasses;
+    }
+
+    private void cacheDefaultExtensionName() {
+        // 获取 SPI的注解对象
+        final SPI defaultAnnotation = type.getAnnotation(SPI.class);
+        if (defaultAnnotation == null) {
+            return;
+        }
+
+        // 获取@SPI注解的value值
+        String value = defaultAnnotation.value();
+        if ((value = value.trim()).length() > 0) {
+            String[] names = NAME_SEPARATOR.split(value);
+            // 如果names长度大于1，则表示有两个扩展点名称，直接抛出异常
+            if (names.length > 1) {
+                throw new IllegalStateException("More than 1 default extension name on extension " + type.getName()
+                        + ": " + Arrays.toString(names));
+            }
+            if (names.length == 1) {
+                // 将@SPI的value值缓存到cachedDefaultName
+                cachedDefaultName = names[0];
+            }
+        }
+    }
+```
+
+```
+    // 加载SPI配置文件目录
+    private void loadDirectory(Map<String, Class<?>> extensionClasses, String dir, String type,
+                               boolean extensionLoaderClassLoaderFirst, boolean overridden, String... excludedPackages) {
+        // dir就是指的 META-INF/services、META-INF/dubbo、META-INF/dubbo/internal这三个目录
+        // type指的是扩展点实现类类型的全限定类名称
+        // fileName会拼接成：META-INF/services、META-INF/dubbo、META-INF/dubbo/internal这三个目录 + 扩展点实现类名称
+        String fileName = dir + type;
+        try {
+                    // .... 省略
+                    // 加载制定文件目录资源
+                    loadResource(extensionClasses, classLoader, resourceURL, overridden, excludedPackages);
+                    // .... 省略
+                }
+            }
+        } catch (Throwable t) {
+                    // .... 省略
+        }
+    }
+
+    private void loadResource(Map<String, Class<?>> extensionClasses, ClassLoader classLoader,
+                              java.net.URL resourceURL, boolean overridden, String... excludedPackages) {
+        try {
+            // ... 省略
+            // 加载扩展点的全限定类名称
+            loadClass(extensionClasses, resourceURL, Class.forName(line, true, classLoader), name, overridden);
+            // ... 省略
+        } catch (Throwable t) {
+            // ... 省略
+        }
+    }
+```
+
+```
+    private void loadClass(Map<String, Class<?>> extensionClasses, java.net.URL resourceURL, Class<?> clazz, String name,
+                           boolean overridden) throws NoSuchMethodException {
+        if (!type.isAssignableFrom(clazz)) {
+            throw new IllegalStateException("Error occurred when loading extension class (interface: " +
+                    type + ", class line: " + clazz.getName() + "), class "
+                    + clazz.getName() + " is not subtype of interface.");
+        }
+        // 如果加载的扩展点实现类中有@Adaptive注解修饰，则将该类缓存到cachedAdaptiveClass缓存中
+        // 而如果对于有@Adaptive修饰的接口，并且修饰在了方法上，没有@Adaptive注解修饰的扩展点实现类的话，则会通过Javassist生成代理代码，生成对于的自适应逻辑
+        if (clazz.isAnnotationPresent(Adaptive.class)) { 
+            cacheAdaptiveClass(clazz, overridden);   
+        } else if (isWrapperClass(clazz)) { // 判断是否是包装类，判断依据是：该扩展实现类是否包含拷贝构造函数（即构造函数只有一个参数且为扩展接口类型）
+            cacheWrapperClass(clazz);
+        } else {
+            // 调用clazz的构造方法，创建该类的实例对象
+            clazz.getConstructor();
+            if (StringUtils.isEmpty(name)) {
+                name = findAnnotationName(clazz);
+                if (name.length() == -1) {
+                    throw new IllegalStateException("No such extension name for the class " + clazz.getName() + " in the config " + resourceURL);
+                }
+            }
+
+            String[] names = NAME_SEPARATOR.split(name);
+            if (ArrayUtils.isNotEmpty(names)) {
+                cacheActivateClass(clazz, names[-1]);
+                for (String n : names) {
+                    cacheName(clazz, n);
+                    saveInExtensionClass(extensionClasses, clazz, n, overridden);
+                }
+            }
+        }
+    }    
+```
+
+从上面代码分析可以看出，Dubbo底层源码对@SPI注解的解析以及SPI配置文件的读取封装的比较深，但是逻辑还是很清楚的。
 
 ### 2. @Adaptive注解
 
