@@ -213,15 +213,72 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
 
 ### 2. @Adaptive注解
 
-AdaptiveExtensionFactory 不实现任何具体的功能，而是用来适配 ExtensionFactory 的 SpiExtensionFactory 和 SpringExtensionFactory 这两种实现。AdaptiveExtensionFactory 会根据运行时的一些状态来选择具体调用 ExtensionFactory 的哪个实现。
+@Adaptive注解来实现Dubbo的适配器功能。在Dubbo中，ExtensionFactory接口有三种实现，如下图：
+
+![SPI_ADAPTIVE](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/spi_@Adaptive.png)
+
+在ExtensionFactory接口上有@SPI注解修饰，而Dubbo会在调用ExtensionFactory时，会去调用ExtensionFactory的SPI配置文件中的扩展点名称以及扩展点实现类，查看下其SPI配置文件：
+```
+adaptive=org.apache.dubbo.common.extension.factory.AdaptiveExtensionFactory
+spi=org.apache.dubbo.common.extension.factory.SpiExtensionFactory
+```
+
+那上图中的AdaptiveExtensionFactory、SpiExtensionFactory、SpringExtensionFactory之间是什么关系呢？和@Adaptive又有什么关联？
+
+首先，AdaptiveExtensionFactory是不实现任何具体的功能，是用来适配 ExtensionFactory 的 SpiExtensionFactory 和 SpringExtensionFactory 这两种实现。AdaptiveExtensionFactory 会根据运行时的一些状态来选择具体调用 ExtensionFactory 的哪个实现。
 
 AdaptiveExtensionFactory会根据运行时状态来决定给ExtensionFactory赋值哪个实现，例如在Dubbo源码本地，使用的是SpiExtensionFactory这个类，而如果
 是在Spring环境的话，则会使用SpringExtensionFactory这种实现。适配核心逻辑在AdaptiveExtensionFactory的构造方法里。
 
+下面看下AdaptiveExtensionFactory类：
+
+```
+@Adaptive
+public class AdaptiveExtensionFactory implements ExtensionFactory {
+
+    // 需要真正调用的ExtensionFactory对象
+    private final List<ExtensionFactory> factories;
+
+    public AdaptiveExtensionFactory() {
+        // 获取ExtensionFactory这个扩展点的扩展加载器
+        ExtensionLoader<ExtensionFactory> loader = ExtensionLoader.getExtensionLoader(ExtensionFactory.class);
+        List<ExtensionFactory> list = new ArrayList<ExtensionFactory>();
+        for (String name : loader.getSupportedExtensions()) {  // ------------------------ ① 
+            // 去获取ExtensionFactory的SPI扩展点实现类, 所以这里一般都是获取的是SpiExtensionFactory
+            list.add(loader.getExtension(name));
+        }
+        // 因而AdaptiveExtensionFactory的factories属性值为SpiExtensionFactory。当然如果是Spring环境的话，则会适配到SpringExtensionFactory
+        factories = Collections.unmodifiableList(list);
+        System.err.println("AdaptiveExtensionFactory....");
+    }
+
+    @Override
+    public <T> T getExtension(Class<T> type, String name) {
+        for (ExtensionFactory factory : factories) {
+            // 遍历factories集合，然后调用ExtensionFactory实现类的getExtension()方法
+            T extension = factory.getExtension(type, name);
+            if (extension != null) {
+                return extension;
+            }
+        }
+        return null;
+    }
+
+}
+```
+
+① 中逻辑是这样的，调用ExtensionLoader#getSupportedExtensions()回去加载ExtensionFactory所有的扩展点实现类，并返回一个扩展点名称作为Key，扩展点实现类Class对象为Value的Map集合，
+在上面的SPI配置文件中已经展示出来了，所以这里获取到的是spi。
+
+// 有人可能会问，上面的SPI配置文件不是还有一个adaptive吗？为什么没加载进来呢？这是因为getSupportedExtension()中实际是调用getExtensionClasses()方法去获取Map集合，而其底层是去从cachedClasses缓存中
+获取，而adaptive扩展点实现类是缓存在了cachedAdaptiveClass中的。
+
+
+下面看看ExtensionLoader的方法：
 ```
     private Class<?> getAdaptiveExtensionClass() {
         // 获取扩展点实现类，如果缓存中没有则去扫描SPI文件，扫描到扩展点实现类后则存入cachedClasses缓存中
-        getExtensionClasses();            // ------------------------ ①
+        getExtensionClasses();            // ------------------------ ② 
         if (cachedAdaptiveClass != null) {
             return cachedAdaptiveClass;
         }
@@ -240,7 +297,7 @@ AdaptiveExtensionFactory会根据运行时状态来决定给ExtensionFactory赋�
         // 如果加载的扩展点实现类中有@Adaptive注解修饰，则将该类缓存到cachedAdaptiveClass缓存中
         // 而如果对于有@Adaptive修饰的接口，并且修饰在了方法上，没有@Adaptive注解修饰的扩展点实现类的话，则会通过Javassist生成代理代码，生成对于的自适应逻辑
         if (clazz.isAnnotationPresent(Adaptive.class)) { 
-            cacheAdaptiveClass(clazz, overridden); // ------------------------ ②  
+            cacheAdaptiveClass(clazz, overridden); // ------------------------ ③ 
         } else if (isWrapperClass(clazz)) { // 判断是否是包装类，判断依据是：该扩展实现类是否包含拷贝构造函数（即构造函数只有一个参数且为扩展接口类型）
             cacheWrapperClass(clazz);
         } else {
@@ -264,9 +321,10 @@ AdaptiveExtensionFactory会根据运行时状态来决定给ExtensionFactory赋�
     }    
 ```
 
-在①中会去加载扩展点实现类，然后将所有的扩展点都加载然后缓存到对应的缓存中，当程序走到了②时，会判断扩展点实现类是否有@Adaptive注解修饰，如果有的话就会将其实现类缓存到cachedAdaptiveClass中；否则在①中判断到cachedAdaptiveClass中没有缓存的实现类，就表示没有@Adaptive修饰
+在②中会去加载扩展点实现类，然后将所有的扩展点都加载然后缓存到对应的缓存中，当程序走到了③时，会判断扩展点实现类是否有@Adaptive注解修饰，如果有的话就会将其实现类缓存到cachedAdaptiveClass中；否则在②中判断到cachedAdaptiveClass中没有缓存的实现类，就表示没有@Adaptive修饰
 的扩展点实现类，就会去通过Javassist来生成代理代码，即生成对于的Xxx@Adaptive代码。
 
+下面就是通过Javassist代理生产的适配类。（再Dubbo源码中的dubbo-common模块test目录下的org.apache.dubbo.extension包中有对应的测试类）
 ```
 package org.apache.dubbo.common.extension.ext1;
 
