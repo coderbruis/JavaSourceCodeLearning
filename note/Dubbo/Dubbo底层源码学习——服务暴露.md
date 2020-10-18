@@ -13,6 +13,7 @@ public class Protocol$Adaptive implements org.apache.dubbo.rpc.Protocol {
 		org.apache.dubbo.common.URL url = arg1;
 		String extName = ( url.getProtocol() == null ? "dubbo" : url.getProtocol() );
 		if(extName == null) throw new IllegalStateException("Failed to get extension (org.apache.dubbo.rpc.Protocol) name from url (" + url.toString() + ") use keys([protocol])");
+        // 这里extension为ProtocolFilterWrapper类
 		org.apache.dubbo.rpc.Protocol extension = (org.apache.dubbo.rpc.Protocol)ExtensionLoader.getExtensionLoader(org.apache.dubbo.rpc.Protocol.class).getExtension(extName);
 		return extension.refer(arg0, arg1);
 	}
@@ -40,8 +41,10 @@ public class ProxyFactory$Adaptive implements org.apache.dubbo.rpc.ProxyFactory 
 		if (arg0 == null) throw new IllegalArgumentException("org.apache.dubbo.rpc.Invoker argument == null");
 		if (arg0.getUrl() == null) throw new IllegalArgumentException("org.apache.dubbo.rpc.Invoker argument getUrl() == null");
 		org.apache.dubbo.common.URL url = arg0.getUrl();
+        // 判断如果取不到proxy，则使用默认值javassist
 		String extName = url.getParameter("proxy", "javassist");
 		if(extName == null) throw new IllegalStateException("Failed to get extension (org.apache.dubbo.rpc.ProxyFactory) name from url (" + url.toString() + ") use keys([proxy])");
+        // 这里extension是StubProxyFactoryWrapper对象
 		org.apache.dubbo.rpc.ProxyFactory extension = (org.apache.dubbo.rpc.ProxyFactory)ExtensionLoader.getExtensionLoader(org.apache.dubbo.rpc.ProxyFactory.class).getExtension(extName);
 		return extension.getProxy(arg0);
 	}
