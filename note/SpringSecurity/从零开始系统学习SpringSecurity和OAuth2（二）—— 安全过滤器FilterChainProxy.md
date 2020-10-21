@@ -10,7 +10,7 @@
 - [总结](#总结)
 - [参考](#参考)
 - [相关文章](#相关文章)
- 
+
 <!-- /TOC -->
 ## 前言
 相信了解过SpringSecurity或者是OAuth2的读者，会发现网上会有非常多的相关文章，或是纯概念的，或是带有demo的，无论是哪种类型的文章，本人去阅读之后，对于整个框架的概念还是一知半解，也仅仅是实现了某些功能、某些效果而已，若遇到某些问题时无从下手，只能去百度去Google。这是因为对于SpringSecurity和OAuth2的知识没有一个整体概念的把握，知识体系没有形成系统，遂决定写一个关于SpringSecurity和OAuth2的系列专栏，在建造自己知识体系的同时还希望能帮助有同样困惑的同学。
@@ -30,7 +30,7 @@
 首先，WebSecurityConfiguration实现了ImportAware和BeanClassLoaderAware接口，分别实现了setImportMetadata()和setBeanClassLoader()
 
 setImportMetadata()方法的作用是注入注解元数据。
-```
+```Java
 	public void setImportMetadata(AnnotationMetadata importMetadata) {
 		// 从注入的importMetadata中获取@EnableWebSecurity注解map值
 		Map<String, Object> enableWebSecurityAttrMap = importMetadata
@@ -47,7 +47,7 @@ setImportMetadata()方法的作用是注入注解元数据。
 	}
 ```
 setBeanClassLoader方法作用就是注入类加载器ClassLoader。
-```
+```Java
 	public void setBeanClassLoader(ClassLoader classLoader) {
 		this.beanClassLoader = classLoader;
 	}
@@ -57,7 +57,7 @@ setBeanClassLoader方法作用就是注入类加载器ClassLoader。
 
 答案就在WebSecurityConfiguration的springSecurityFilterChain()方法中
 
-```
+```Java
 	// AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME的值是：springSecurityFilterChain
 	// 所以springSecurityFilterChain()的作用就是想Spring容器中注入一个名为springSecurityChain的bean。
 	@Bean(name = AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME)
@@ -78,7 +78,7 @@ setBeanClassLoader方法作用就是注入类加载器ClassLoader。
 
 ### 2. WebSecurityConfiguration类
 在深入springSecurityFilterChain()方法底层原理之前，需要先了解WebSecurityConfiguration中几个重要的成员变量。
-```
+```Java
 @Configuration
 public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAware {
 
@@ -111,7 +111,7 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 
 我们先来看下WebSecurity的类结构：
 
-```
+```Java
 public final class WebSecurity extends
 		AbstractConfiguredSecurityBuilder<Filter, WebSecurity> implements
 		SecurityBuilder<Filter>, ApplicationContextAware {
@@ -128,14 +128,14 @@ public final class WebSecurity extends
 
 ### 4. AbstractConfiguredSecurityBuilder类
 由其类名：AbstractConfiguredSecurityBuilder就可以知道，该类是一个抽象类，作为抽象类，必然会抽象出abstract方法让子类去实现。浏览AbstractConfiguredSecurityBuilder的方法定义，可以看到它内部只定义了一个抽象方法：
-```
+```Java
 protected abstract O performBuild() throws Exception;
 ```
 
 这个方法会在建造FilterChainProxy时有使用到，这里先留个印象。
 
 回到AbstractConfiguredSecurityBuilder类定义
-```
+```Java
 public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBuilder<O>>
 		extends AbstractSecurityBuilder<O> {
 	// 省略
@@ -147,7 +147,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 
 目光聚焦到SecurityBuilder这个接口
 
-```
+```Java
 // 安全建造者
 // 顾名思义是一个builder建造者，创建并返回一个类型为O的对象
 public interface SecurityBuilder<O> {
@@ -155,7 +155,7 @@ public interface SecurityBuilder<O> {
 }
 ```
 
-```
+```Java
 // 抽象安全建造者
 public abstract class AbstractSecurityBuilder<O> implements SecurityBuilder<O> {
     private AtomicBoolean building = new AtomicBoolean();
@@ -177,7 +177,7 @@ public abstract class AbstractSecurityBuilder<O> implements SecurityBuilder<O> {
 所以B extends SecurityBuilder<O>就是指B是SecurityBuilder的子类，用于建造O。
 
 从WebSecurity中的类定义可以发现
-```
+```Java
 AbstractConfiguredSecurityBuilder<Filter, WebSecurity>
 ```
 
@@ -189,7 +189,7 @@ AbstractConfiguredSecurityBuilder作用就是通过WebSecurity这个建造者建
 
 再来看下AbstractConfiguredSecurityBuilder的成员变量。
 
-```
+```Java
 public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBuilder<O>>
 		extends AbstractSecurityBuilder<O> {
 	private final Log logger = LogFactory.getLog(getClass());
@@ -220,7 +220,7 @@ SecurityConfigurer是一个接口，它就是指的安全配置器，看下它�
 - 安全建造者（SecurityBuilder）在初始化时调用init方法，同时会初始化所有的SecurityConfigurer
 - 安全建造者（SecurityBuilder）在调用configure方法时，同时会调用所有SecurityConfigurer的configure
 
-```
+```Java
 public interface SecurityConfigurer<O, B extends SecurityBuilder<O>> {
 
 	void init(B builder) throws Exception;
@@ -239,7 +239,7 @@ SecurityConfigurer<O, B extends SecurityBuilder<O>>   这个该怎么理解呢�
 
 <br/><br/>
 
-```
+```Java
 private final LinkedHashMap<Class<? extends SecurityConfigurer<O, B>>, List<SecurityConfigurer<O, B>>> configurers = new LinkedHashMap<>();
 ```
 所以configurers就是以建造者为key，各种配置类为value的一个LinkedHashMap。
@@ -253,7 +253,7 @@ private final LinkedHashMap<Class<? extends SecurityConfigurer<O, B>>, List<Secu
 4. 执行配置调用（configure）
 5. **执行建造（performBuild()）**
 
-```
+```Java
 	@Override
 	protected final O doBuild() throws Exception {
 		synchronized (configurers) {
@@ -287,7 +287,7 @@ performBuild()方法是AbstractConfiguredSecurityBuilder提供的抽象方法，
 
 ### 7. WebSecurity什么时候被创建的？
 答案就是在WebSecurityConfiguration的setFilterChainProxySecurityConfiguere()方法里。
-```
+```Java
 	@Autowired(required = false)
 	public void setFilterChainProxySecurityConfigurer(
 			ObjectPostProcessor<Object> objectPostProcessor,
@@ -331,7 +331,7 @@ performBuild()方法是AbstractConfiguredSecurityBuilder提供的抽象方法，
 方法中的webSecurityConfigurers是通过了@Value注解来注入的bean集合，@Value表达式中又包含了一个autowiredWebSecurityConfigurersIgnoreParents.getWebSecurityConfigurers()的调用。
 
 进入AutowiredWebSecurityConfigurersIgnoreParents类，查看其方法getWebSecurityConfigurers()方法。
-```
+```Java
 	public List<SecurityConfigurer<Filter, WebSecurity>> getWebSecurityConfigurers() {
 		// 初始化webSecurityConfigurers集合
 		List<SecurityConfigurer<Filter, WebSecurity>> webSecurityConfigurers = new ArrayList<>();

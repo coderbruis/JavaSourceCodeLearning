@@ -29,7 +29,7 @@
 
 #### 1.1 源码分析
 
-```
+```Java
 public class SecurityContextPersistenceFilter extends GenericFilterBean {
 
 	static final String FILTER_APPLIED = "__spring_security_scpf_applied";
@@ -125,7 +125,7 @@ public class SecurityContextPersistenceFilter extends GenericFilterBean {
 #### 2.1 源码分析
 
 先判断看下ExceptionTranslationFilter的成员变量
-```
+```Java
 public class ExceptionTranslationFilter extends GenericFilterBean {
 	
 	// AccessDeniedException处理器
@@ -164,7 +164,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 
 #### 2.2 doFilter源码分析
 
-```
+```Java
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
@@ -216,7 +216,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 
 ```
 
-```
+```Java
 	// SpringSecurityException异常处理的核心逻辑
 	private void handleSpringSecurityException(HttpServletRequest request,
 			HttpServletResponse response, FilterChain chain, RuntimeException exception)
@@ -261,7 +261,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 	}
 ```
 
-```
+```Java
 	protected void sendStartAuthentication(HttpServletRequest request,
 			HttpServletResponse response, FilterChain chain,
 			AuthenticationException reason) throws ServletException, IOException {
@@ -286,7 +286,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 
 进入其configure方法查看
 
-```
+```Java
 	@Override
 	public void configure(H http) throws Exception {
 		// 获取authenticationEntryPoint
@@ -307,7 +307,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 
 下面接着查看一下getAuthenticationEntryPoint()方法
 
-```
+```Java
 	AuthenticationEntryPoint getAuthenticationEntryPoint(H http) {
 		AuthenticationEntryPoint entryPoint = this.authenticationEntryPoint;
 		// 由于entryPoint为空，所以调用createDefaultEntryPoint去创建entryPoint
@@ -318,7 +318,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 	}
 ```
 
-```
+```Java
 	private AuthenticationEntryPoint createDefaultEntryPoint(H http) {
 		// 如果entryPointMappings为空，则返回Http403ForbiddenEntryPoint
 		if (this.defaultEntryPointMappings.isEmpty()) {
@@ -341,7 +341,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200819101823377.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70#pic_center)
 
 可以看到，HTTP403ForbiddenEntryPiont这个类代码非常少
-```
+```Java
 public class Http403ForbiddenEntryPoint implements AuthenticationEntryPoint {
 	private static final Log logger = LogFactory.getLog(Http403ForbiddenEntryPoint.class);
 
@@ -361,7 +361,7 @@ public class Http403ForbiddenEntryPoint implements AuthenticationEntryPoint {
 
 这里，还讲解一下另外一个类LoginURLAuthenticationEntryPoint的方法commence。
 
-```
+```Java
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		// 重定向url

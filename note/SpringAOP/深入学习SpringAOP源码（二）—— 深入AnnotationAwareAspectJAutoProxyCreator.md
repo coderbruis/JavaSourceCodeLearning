@@ -26,7 +26,7 @@
 
 
 将视线转移到AbstractAutowireCapableBeanFactory：
-```
+```Java
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
     // 在实例化AnnotationAwareAspectJAutoProxyCreator之前进行解析
     @Nullable
@@ -55,7 +55,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 resolveBeforeInstantiation()方法调用了AbstractAutoProxyCreator()的postProcessBeforeInstantiation()和postProcessAfterInstantiation()。
 
 AbstractAutoProxyCreator.class
-```
+```Java
 import ...
 public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware {
     /* 
@@ -142,7 +142,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport imp
 
 
 ReflectiveAspectJAdvisorFactory的getAdvisors()中主要的工作是：迭代出@AspectJ注解修饰的类的方法，然后拿着这些方法区尝试获取Advisor，最后存在advisors集合里。
-```
+```Java
 public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFactory implements Serializable {
     //Spring将@AspectJ注解的beanName和bean工厂封装为了MetadataAwareAspectInstanceFactory
     public List<Advisor> getAdvisors(MetadataAwareAspectInstanceFactory aspectInstanceFactory) {
@@ -186,7 +186,7 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 ```
 
 getAdvisorMethods方法中通过反射工具来获取Advisor方法。
-```
+```Java
 public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFactory implements Serializable {
     private List<Method> getAdvisorMethods(Class<?> aspectClass) {
         List<Method> methods = new ArrayList();
@@ -203,7 +203,7 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 ```
 
 视线来到ReflectiveAspectJAdvisorFactory的getAdvisor方法
-```
+```Java
     @Nullable
     public Advisor getAdvisor(Method candidateAdviceMethod, MetadataAwareAspectInstanceFactory aspectInstanceFactory, int declarationOrderInAspect, String aspectName) {
         this.validate(aspectInstanceFactory.getAspectMetadata().getAspectClass());
@@ -243,7 +243,7 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 1. 从缓存中获取通知
 2. 创建代理
 
-```
+```Java
     protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
         if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
             return bean;
@@ -269,7 +269,7 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
     }
 ```
 
-```
+```Java
 public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyCreator {
     ...
     @Nullable
@@ -299,7 +299,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 }
 ```
 
-```
+```Java
 public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorAutoProxyCreator {
     protected List<Advisor> findCandidateAdvisors() {
         /*
@@ -317,7 +317,7 @@ public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorA
 }
 ```
 
-```
+```Java
 public class BeanFactoryAspectJAdvisorsBuilder {
     ...
     public List<Advisor> buildAspectJAdvisors() {
@@ -399,7 +399,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20190823164940860.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
 
 回到方法
-```
+```Java
 protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
         List<Advisor> candidateAdvisors = this.findCandidateAdvisors();
         /*
@@ -416,7 +416,7 @@ protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName
 ```
 
 findCandidateAdvisors()完成的是通知的解析工作，但是并不是所有的通知都适用于当前bean的，还要选出适合的通知。选择逻辑在findAdvisorsTahtCanApply方法里。
-```
+```Java
 public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyCreator {
     ...
     protected List<Advisor> findAdvisorsThatCanApply(List<Advisor> candidateAdvisors, Class<?> beanClass, String beanName) {
@@ -434,7 +434,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 }
 ```
 
-```
+```Java
 public abstract class AopUtils {
     public static List<Advisor> findAdvisorsThatCanApply(List<Advisor> candidateAdvisors, Class<?> clazz) {
         if (candidateAdvisors.isEmpty()) {
@@ -541,7 +541,7 @@ public abstract class AopUtils {
 
 回到AbstractAutoProxyCreator的wrapIfNecessary方法中。经过this.getAdvicesAndAdvisorsForBean()方法的工作，获取到了可应用的通知对象数组，接下来的工作就是要对这些通知进行代理了。
 
-```
+```Java
 public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware {
     ...
     protected Object createProxy(Class<?> beanClass, @Nullable String beanName, @Nullable Object[] specificInterceptors, TargetSource targetSource) {
@@ -614,7 +614,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport imp
 }
 ```
 
-```
+```Java
 public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Serializable {
     public Advisor wrap(Object adviceObject) throws UnknownAdviceTypeException {
         // 如果封装对象本身就是Advisor，则无需做任何处理
@@ -658,7 +658,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 
 **获取代理方式**
 
-```
+```Java
 public class ProxyFactory extends ProxyCreatorSupport {
     ...
     public Object getProxy(@Nullable ClassLoader classLoader) {
@@ -666,7 +666,7 @@ public class ProxyFactory extends ProxyCreatorSupport {
     }
 }
 ```
-```
+```Java
 public class ProxyCreatorSupport extends AdvisedSupport {
     protected final synchronized AopProxy createAopProxy() {
         if (!this.active) {
@@ -678,7 +678,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 }
 ```
 
-```
+```Java
 public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
     public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
         // 如果aop配置文件没有配置属性<aop:aspectj-autoproxy />属性，则返回JdkDynamicAopProxy的实例对象

@@ -33,7 +33,7 @@
 
 下面看看ApplicationListener接口定义信息
 
-```
+```Java
 /**
  * Interface to be implemented by application event listeners.
  *
@@ -88,7 +88,7 @@ EventPublishingRunListener有什么作用？
 
 #### 1.1 EventPublishingRunListener
 下面先看下EventPublishingRunListener源码
-```
+```Java
 /**
  * SpringApplicationRunListener 是用于发布 SpringApplicationEvent的。
  * SpringApplicationRunListener通过内部的ApplicationEventMulticaster在容器刷新之前来触发事件。
@@ -219,7 +219,7 @@ public class EventPublishingRunListener implements SpringApplicationRunListener,
 ```
 EventPublishingRunListener实现了SpringApplicationRunListener接口，该接口定义了用于监听**SpringApplication生命周期**的一系列接口方法。
 
-```
+```Java
 public interface SpringApplicationRunListener {
 
 	/**
@@ -283,7 +283,7 @@ public interface SpringApplicationRunListener {
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200623065336310.png)
 因此可以知道，在SpringBoot中核心广播器就是SimpleApplicationEventMulticaster，所有管理监听器播放事件的工作都由SimpleApplicationEventMulticaster来完成。下面先来看下接口ApplicationEventMulticaster源码及注释：
 
-```
+```Java
 /**
  * ApplicationEventMulticaster接口的实现类用于管理多个ApplicationListener监听器，并对事件进行广播
  *
@@ -350,7 +350,7 @@ AbstractApplicationEventMulticaster不仅实现了ApplicationEventMulticaster，
 
 AbstractApplicationEventMulticaster已经把监听器存储好了，就等着广播器进行事件广播，而广播的方法就是视SimpleApplicationEventMulticaster#multicastEvent方法。
 
-```
+```Java
 @Override
 	public void multicastEvent(ApplicationEvent event) {
 		// 广播事件
@@ -378,7 +378,7 @@ AbstractApplicationEventMulticaster已经把监听器存储好了，就等着广
 #### 2.1 AbstractApplicationEventMulticaster#getApplicationListeners
 既然监听器存放在了播放器里，那么播放器肯定会提供一个获取监听器的方法，那么这个方法就是getApplicationListeners。
 **AbstractApplicationEventMulticaster#getApplicationListeners**
-```
+```Java
 protected Collection<ApplicationListener<?>> getApplicationListeners(
 			ApplicationEvent event, ResolvableType eventType) {
 
@@ -432,11 +432,11 @@ protected Collection<ApplicationListener<?>> getApplicationListeners(
 下图为SpringBoot如何将监听器添加进EventPublishingRunListener中的简易流程图。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200623120430115.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
 除此之外，还有一个重要方法AbstractApplicationEventMulticaster#supportsEvent，该方法有两个重载方法
-```
+```Java
 supportsEvent(
 			ConfigurableBeanFactory beanFactory, String listenerBeanName, ResolvableType eventType)
 ```
-```
+```Java
 supportsEvent(Class<?> listenerType, ResolvableType eventType)
 ```
 
@@ -470,13 +470,13 @@ supportsEvent(Class<?> listenerType, ResolvableType eventType)
 
 ### 4. 模仿SpringBoot，实现自定义的事件与监听器
 首先，定义一个天气事件抽象类
-```
+```Java
 public abstract class WeatherEvent {
     public abstract String getWeather();
 }
 ```
 定义两个天气事件
-```
+```Java
 public class RainEvent extends WeatherEvent{
     @Override
     public String getWeather() {
@@ -484,7 +484,7 @@ public class RainEvent extends WeatherEvent{
     }
 }
 ```
-```
+```Java
 public class SnowEvent extends WeatherEvent{
     @Override
     public String getWeather() {
@@ -494,7 +494,7 @@ public class SnowEvent extends WeatherEvent{
 ```
 
 接着定义一个事件监听器
-```
+```Java
 public interface WeatherListener {
 	// 类似于SpringBoot监听器的onApplicationEvent方法
     void onWeatherEvent(WeatherEvent event);
@@ -502,7 +502,7 @@ public interface WeatherListener {
 ```
 
 有了监听器接口，那么就要定义实现类
-```
+```Java
 @Component
 public class RainListener implements WeatherListener{
     @Override
@@ -513,7 +513,7 @@ public class RainListener implements WeatherListener{
     }
 }
 ```
-```
+```Java
 @Component
 public class SnowListener implements WeatherListener {
     @Override
@@ -527,7 +527,7 @@ public class SnowListener implements WeatherListener {
 可以看到，SnowListener和RainListener类的onWeatherEvent方法会依据对应的天气Event进行过滤。
 
 定义完了监听器以及事件之后，就还差广播器以及调用广播器播放事件的XXRunListener了。先定义一个事件广播器，包含了基础的添加监听器、移除监听器、播放事件的功能。
-```
+```Java
 public interface EventMulticaster {
     void multicastEvent(WeatherEvent event);
     void addListener(WeatherListener weatherListener);
@@ -535,7 +535,7 @@ public interface EventMulticaster {
 }
 ```
 抽象广播器类
-```
+```Java
 @Component
 public abstract class AbstractEventMulticaster implements EventMulticaster{
 
@@ -569,7 +569,7 @@ public abstract class AbstractEventMulticaster implements EventMulticaster{
 ```
 
 定义完了广播器，就运行广播器的XXRunListener了，下面定义一个WeatherRunListener，用于播放感兴趣的事件。
-```
+```Java
 @Component
 public class WeatherRunListener {
 

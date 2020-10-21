@@ -1,4 +1,4 @@
-```
+```Java
 package org.apache.dubbo.rpc;
 import org.apache.dubbo.common.extension.ExtensionLoader;
 public class Protocol$Adaptive implements org.apache.dubbo.rpc.Protocol {
@@ -33,7 +33,7 @@ public class Protocol$Adaptive implements org.apache.dubbo.rpc.Protocol {
 }
 ```
 
-```
+```Java
 package org.apache.dubbo.rpc;
 import org.apache.dubbo.common.extension.ExtensionLoader;
 public class ProxyFactory$Adaptive implements org.apache.dubbo.rpc.ProxyFactory {
@@ -71,7 +71,7 @@ public class ProxyFactory$Adaptive implements org.apache.dubbo.rpc.ProxyFactory 
 }
 ```
 
-```
+```Java
 package org.apache.dubbo.remoting;
 import org.apache.dubbo.common.extension.ExtensionLoader;
 public class Transporter$Adaptive implements org.apache.dubbo.remoting.Transporter {
@@ -99,7 +99,7 @@ public class Transporter$Adaptive implements org.apache.dubbo.remoting.Transport
 ![export01](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/export01.png)
 
 JavassistProxyFactory代码如下：
-```
+```Java
 public class JavassistProxyFactory extends AbstractProxyFactory {
 
     @Override
