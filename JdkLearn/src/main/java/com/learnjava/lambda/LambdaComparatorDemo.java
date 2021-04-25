@@ -21,11 +21,11 @@ public class LambdaComparatorDemo {
     static {
         Employee e1 = new Employee(1,23,"M","Rick","Beethovan", "2021-04-01");
         Employee e2 = new Employee(2,13,"F","Martina","Hengis", "2021-04-02");
-        Employee e3 = new Employee(3,43,"M","Ricky","Martin","2021-04-03" );
-        Employee e4 = new Employee(4,26,"M","Jon","Lowman", "2021-04-04");
-        Employee e5 = new Employee(5,19,"F","Cristine","Maria", "2021-04-05");
+        Employee e3 = new Employee(3,43,"M","Ricky","Martin","2021-04-09" );
+        Employee e4 = new Employee(4,26,"M","Jon","Lowman", "2021-04-10");
+        Employee e5 = new Employee(5,19,"F","Cristine","Maria", "2021-04-01");
         Employee e6 = new Employee(6,15,"M","David","Feezor", "2021-04-06");
-        Employee e7 = new Employee(7,68,"F","Melissa","Roy", "2021-04-07");
+        Employee e7 = new Employee(7,68,"F","Melissa","Roy", "2021-04-06");
         Employee e8 = new Employee(8,79,"M","Alex","Gussin", "2021-04-08");
         Employee e9 = new Employee(9,15,"F","Neetu","Singh", "2021-04-09");
         Employee e10 = new Employee(10,45,"M","Naveen","Jain", "2021-04-10");
