@@ -1,4 +1,4 @@
-package com.learnjava.nettysource;
+package com.learnjava.io.netty.bio;
 
 import java.io.IOException;
 import java.net.Socket;

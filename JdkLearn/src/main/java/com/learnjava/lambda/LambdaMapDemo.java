@@ -16,8 +16,8 @@ public class LambdaMapDemo {
     public static void main(String[] args) {
 //        test01();
 //        test02();
-//        test03();
-        test04();
+        test03();
+//        test04();
     }
 
     /**
@@ -58,11 +58,14 @@ public class LambdaMapDemo {
      */
     public static void test03() {
         Map<String, Integer> codes = new HashMap<>();
-        codes.put("2021-04-01", 1);
-        codes.put("2021-04-15", 49);
-        codes.put("2021-04-10", 33);
-        codes.put("2021-04-05", 86);
-        codes.put("2021-04-20", 92);
+        codes.put("2021-03", 1);
+        codes.put("2021-02", 49);
+        codes.put("2021-05", 33);
+//        codes.put("2021-04-01", 1);
+//        codes.put("2021-04-15", 49);
+//        codes.put("2021-04-10", 33);
+//        codes.put("2021-04-05", 86);
+//        codes.put("2021-04-20", 92);
 
         // 先将Map转化为List，通过collect处理后再转为Map
         Map<String, Integer> sortedMap = codes.entrySet()

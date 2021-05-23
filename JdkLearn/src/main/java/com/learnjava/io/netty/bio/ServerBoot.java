@@ -1,4 +1,4 @@
-package com.learnjava.nettysource;
+package com.learnjava.io.netty.bio;
 
 
 /**
