@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <netty-all.version>4.1.42.Final</netty-all.version>
+        <netty-all.version>4.1.6.Final</netty-all.version>
     </properties>
 
     <dependencies>
