@@ -10,6 +10,7 @@ Spring-Netty/Spring-Netty.iml
 Spring-Netty/learnnetty.iml
 Spring-Security/SpringSecurityDemo.iml
 Spring-Security/springsecurity.iml
+rocketmqdemo/rocketmqdemo.iml
 
 # target
 JdkLearn/target
@@ -18,6 +19,7 @@ Spring-AOP/target
 Spring-Boot/target
 Spring-Netty/target
 Spring-Security/target
+rocketmqdemo/target
 
 # .DO_Store
 .DS_Store
