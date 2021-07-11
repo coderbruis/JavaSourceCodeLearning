@@ -101,6 +101,8 @@ SpringCloud源码
     - [二进制运算以及源码、反码以及补码学习](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/%E4%BA%8C%E8%BF%9B%E5%88%B6.md) 
     - [Netty源码包结构](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E6%BA%90%E7%A0%81%E5%8C%85%E7%BB%93%E6%9E%84.md)
     - [Netty中的EventLoopGroup](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E4%B8%AD%E7%9A%84EventLoopGroup%E6%98%AF%E4%BB%80%E4%B9%88.md)
+    - [Netty中的ChannelPipeline]()
+    - [Netty中的内存分配]()
     
 -   SpringSecurity&OAuth2源码学习
     - SpringSecurity版本：5.1.0.RELEASE
@@ -122,8 +124,6 @@ SpringCloud源码
     - Dubbo底层源码学习（五）—— Dubbo的注册中心重试机制
     - [Dubbo底层源码学习（六）—— Dubbo的服务暴露](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/Dubbo/Dubbo%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2.md)
     - Dubbo底层源码学习（七）—— Dubbo的服务消费
-    
--   Netty底层源码解析    
 
 -   RocketMQ底层源码解析    
  
