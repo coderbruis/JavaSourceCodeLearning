@@ -1,4 +1,4 @@
-package com.bruis.learnnetty.netty.demo01;
+package com.bruis.learnnetty.netty.quickstart;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
