@@ -48,14 +48,15 @@ public class FastThreadLocalTest {
             Object object0 = threadLocal0.get();
             System.out.println(Thread.currentThread().getName() + "---> " + object0);
 
-            while (true) {
-                System.out.println(Thread.currentThread().getName() + "---> " + (threadLocal0.get() == object0));
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            System.out.println(Thread.currentThread().getName() + "---> " + (threadLocal0.get() == object0));
+//            while (true) {
+//                System.out.println(Thread.currentThread().getName() + "---> " + (threadLocal0.get() == object0));
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }).start();
     }
 }
