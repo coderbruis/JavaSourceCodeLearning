@@ -30,7 +30,7 @@ public class Server {
     }
 
     public void doStart() {
-        while (true) {
+        for (;;) {
             try {
                 Socket client = serverSocket.accept();
                 new ClientHandler(client).start();
