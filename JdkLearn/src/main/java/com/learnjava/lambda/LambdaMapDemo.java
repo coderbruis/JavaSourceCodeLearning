@@ -41,7 +41,7 @@ public class LambdaMapDemo {
     }
 
     /**
-     * HashMap的merge方法，如果key相同，则通过merge来对key相同的袁术进行处理
+     * HashMap的merge方法，如果key相同，则通过merge来对key相同的元素进行处理
      */
     public static void test02() {
         String key = "money";
