@@ -8,9 +8,14 @@ package com.learnjava.optimization;
  */
 public class OptimizeUtilDemo {
 
-    // 超快深拷贝工具类BeanCopier
+    /**
+     * 超快深拷贝工具类BeanCopier
+     */
     private BeanCopierDemo beanCopierDemo;
 
-    // Caffeine Cache
+    /**
+     * Caffeine Cache
+     */
+    private CaffeineDemo caffeineDemo;
 
 }
