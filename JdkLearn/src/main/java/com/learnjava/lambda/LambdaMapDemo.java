@@ -81,7 +81,6 @@ public class LambdaMapDemo {
                                 LinkedHashMap::new
                         )
                 );
-
         sortedMap.entrySet().forEach(System.out::println);
 
     }
