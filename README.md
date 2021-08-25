@@ -20,7 +20,7 @@
     <img src="https://img.shields.io/badge/Netty-4.1.60.Final-blue" alt="Netty">
   </a>
   <a href="https://rocketmq.apache.org/">
-    <img src="https://img.shields.io/badge/rocketmq-4.9.0-green" alt="Netty">
+    <img src="https://img.shields.io/badge/RocketMQ-4.9.0-green" alt="Netty">
   </a>
 </p>
 
