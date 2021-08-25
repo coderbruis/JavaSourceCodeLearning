@@ -99,14 +99,6 @@ SpringCloud源码
     - [深入浅出SpringBoot源码——系统初始化器](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/SpringBoot/%E6%B7%B1%E5%85%A5SpringBoot%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0%E4%B9%8B%E2%80%94%E2%80%94%E7%B3%BB%E7%BB%9F.md)
     - [深入浅出SpringBoot源码——启动加载器](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/SpringBoot/%E6%B7%B1%E5%85%A5SpringBoot%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0%E4%B9%8B%E2%80%94%E2%80%94%E5%90%AF%E5%8A%A8%E5%8A%A0%E8%BD%BD%E5%99%A8.md)
     
-
--   Netty源码学习
-    - [二进制运算以及源码、反码以及补码学习](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/%E4%BA%8C%E8%BF%9B%E5%88%B6.md) 
-    - [Netty源码包结构](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E6%BA%90%E7%A0%81%E5%8C%85%E7%BB%93%E6%9E%84.md)
-    - [Netty中的EventLoopGroup](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E4%B8%AD%E7%9A%84EventLoopGroup%E6%98%AF%E4%BB%80%E4%B9%88.md)
-    - [Netty中的ChannelPipeline]()
-    - [Netty中的内存分配]()
-    
 -   SpringSecurity&OAuth2源码学习
     - SpringSecurity版本：5.1.0.RELEASE
     - [深入浅出SpringSecurity和OAuth2（一）—— 初识SpringSecurity](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/SpringSecurity/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0SpringSecurity%E5%92%8COAuth2%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%20%E5%88%9D%E8%AF%86SpringSecurity.md)   
@@ -129,6 +121,10 @@ SpringCloud源码
     - Dubbo底层源码学习（七）—— Dubbo的服务消费
     
 -   Netty底层源码解析    
+    - Netty版本：4.1.60.Final
+    - [二进制运算以及源码、反码以及补码学习](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/%E4%BA%8C%E8%BF%9B%E5%88%B6.md) 
+    - [Netty源码包结构](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E6%BA%90%E7%A0%81%E5%8C%85%E7%BB%93%E6%9E%84.md)
+    - [Netty中的EventLoopGroup](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/Netty/Netty%E4%B8%AD%E7%9A%84EventLoopGroup%E6%98%AF%E4%BB%80%E4%B9%88.md)
     - [Netty底层源码解析-初始Netty及其架构](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/Netty/Netty%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E5%88%9D%E5%A7%8BNetty%E5%8F%8A%E5%85%B6%E6%9E%B6%E6%9E%84.md)
     - [Netty底层源码解析-Netty服务端启动分析](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/Netty/Netty%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-Netty%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%90%AF%E5%8A%A8%E5%88%86%E6%9E%90.md)
     - [Netty底层源码解析-NioEventLoop原理分析](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/Netty/Netty%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-NioEventLoop%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90.md)
@@ -140,6 +136,7 @@ SpringCloud源码
     - Netty底层源码解析-RocketMQ底层使用到的Netty
 
 -   RocketMQ底层源码解析    
+    - RocketMQ版本：4.9.0
     - RocketMQ底层源码解析-RocketMQ环境搭建
     - RocketMQ底层源码解析-本地调试RocketMQ源码
     - RocketMQ底层源码解析-NameServer分析
@@ -148,9 +145,8 @@ SpringCloud源码
 
 todo
 
-- 完成Dubbo源码分析
-- RocketMQ源码分析
-- Netty源码分析
+- Redis底层源码分析
+- JUC底层源码分析
     
 # 支持
 
