@@ -24,7 +24,7 @@
 
 ### 一、先看看初学者都会的多重if-else判断
 
-```
+```Java
 public int count(int num1, int num2, String operation) {
     if (operation.equals("+")) {
         return num1 + num2;
@@ -45,7 +45,7 @@ public int count(int num1, int num2, String operation) {
 ### 二、策略模式实现
 
 #### 2.1 定义一个策略接口: Strategy.class
-```
+```Java
 public interface Strategy {
     public int doOperation(int num1, int num2);
 }
@@ -54,7 +54,7 @@ public interface Strategy {
 #### 2.2 创建接口的实现类
 
 Add.java
-```
+```Java
 public class Add implements Strategy{
    @Override
    public int doOperation(int num1, int num2) {
@@ -64,7 +64,7 @@ public class Add implements Strategy{
 ```
 
 Substract.java
-```
+```Java
 public class Substract implements Strategy{
    @Override
    public int doOperation(int num1, int num2) {
@@ -74,7 +74,7 @@ public class Substract implements Strategy{
 ```
 
 Multiply.java
-```
+```Java
 public class Multiply implements Strategy{
    @Override
    public int doOperation(int num1, int num2) {
@@ -84,7 +84,7 @@ public class Multiply implements Strategy{
 ```
 
 Divide.java
-```
+```Java
 public class Divide implements Strategy{
    @Override
    public int doOperation(int num1, int num2) {
@@ -95,7 +95,7 @@ public class Divide implements Strategy{
 
 #### 2.3 创建Context类
 
-```
+```Java
 public class Context {
    private Strategy strategy;
    
@@ -110,7 +110,7 @@ public class Context {
 ```
 
 #### 2.4 创建实现类
-```
+```Java
 public class StrategyPatternDemo {
    public static void main(String[] args) {
       Context context = new Context();    
@@ -158,7 +158,7 @@ public class StrategyPatternDemo {
 在学习BeanDefinitionReader之前，要先了解一下什么是BeanDefinition
 
 接口BeanDefinition.java
-```
+```Java
 public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
     String SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;
     String SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;
@@ -172,7 +172,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 可以看到BeanDefinition作为一个接口，主要是用于存储从XML配置文件读取Bean信息到JVM内存的一个载体，具体是存储在了BeanDefinition的实现类——RootBeanDefinition中，下面来看看RootBeanDefinition。
 
-```
+```Java
 public class RootBeanDefinition extends AbstractBeanDefinition {
     @Nullable
 	private BeanDefinitionHolder decoratedDefinition;
@@ -187,7 +187,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 }
 ```
 可以看到RootBeanDefinition不是真正存储Bean信息的载体，继续查看BeanDefinitionHolder
-```
+```Java
 public class BeanDefinitionHolder implements BeanMetadataElement {
 
     private final BeanDefinition beanDefinition;
@@ -244,13 +244,13 @@ public interface ResourceLoader {
 由于```resourceLoader instanceof ResourcePatternResolver为true```，所以走如下逻辑：
 
 AbstractBeanDefinitionReader.java
-```
+```Java
 Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
 int count = loadBeanDefinitions(resources);
 ```
 
 AbstractApplicationContext.java
-```
+```Java
     @Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		return this.resourcePatternResolver.getResources(locationPattern);
@@ -258,7 +258,7 @@ AbstractApplicationContext.java
 ```
 
 PathMatchingResourcePatternResolver.java
-```
+```Java
     @Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		

@@ -17,10 +17,10 @@ Spring容器就相当于一个大的水桶，里面装着很多水——bean对�
 ## 进入正题
 
 在Spring容器的设计中，有两个主要的容器系列，一个是实现BeanFactory接口的简单容器系列，这个接口实现了容器最基本的功能；另一个是ApplicationContext应用上下文，作为容器的高级形态而存在，它用于扩展BeanFactory中现有的功能。ApplicationContext和BeanFactory两者都是用于加载Bean的，但是相比之下，ApplicationContext提供了更多的扩展功能，简单一点说：ApplicationContext包含BeanFactory的所有功能。绝大多数“典型”的企业应用和系统，ApplicationContext就是你需要使用的。下面展示一下分别使用BeanFactory和ApplicationContext读取xml配置文件的方式：
-```
+```Java
 BeanFactory bf = new XmlBeanFactory(new ClassPathResource("applicationContext.xml"));
 ```
-```
+```Java
 ApplicationContext bf = new ClassPathXmlApplicationContext("applicationContext.xml");
 ```
 下面先介绍Spring最核心的两个类。
@@ -63,7 +63,7 @@ XML配置文件的读取是Spring中最重要的功能，因为Spring的大部�
 下面演示一个使用ApplicationContext接口获取xml配置，从而实现一个helloword级别的spring程序：
 
 applicationContext.xml
-```
+```Java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -77,7 +77,7 @@ applicationContext.xml
 </beans>
 ```
 测试类
-```
+```Java
 public class SpringMain {
     public static void main(String[] args) {
         //使用spring容器
@@ -101,11 +101,11 @@ Person{name='Bruis', age=23}
 通过在断点debug，跟踪程序运行。
 
 1. SpringMain.class
-```
+```Java
 ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 ```
 2. ClassPathXmlApplicationContext.class
-```
+```Java
 public ClassPathXmlApplicationContext(String configLocation) throws BeansException {
     this(new String[]{configLocation}, true, (ApplicationContext)null);
 }
@@ -123,7 +123,7 @@ public ClassPathXmlApplicationContext(String[] configLocations, boolean refresh,
 }
 ```
 3. AbstractRefreshableConfigApplicationContext.class
-```
+```Java
 //给configLocations字符串数组设置值，支持多个配置文件已数组方式同时传入。
 public void setConfigLocations(String... locations) {
     if (locations != null) {
@@ -149,7 +149,7 @@ public void setConfigLocations(String... locations) {
 ![Image](https://note.youdao.com/yws/api/personal/file/76AE8FEDAFF54B6881C336B056AC5B0A?method=download&shareKey=430f5263180efd8467df6e6434456f3d)
 
 1. AbstractApplicationContext.class
-```
+```Java
 /*
     简单来说，Spring容器的初始化时右refresh()方法来启动的，这个方法标志着IOC容器的正式启动。具体来说，这里的启动包括了BeanDefinition和Resource的定位、载入和注册三个基本过程。
 */
@@ -198,7 +198,7 @@ public void refresh() throws BeansException, IllegalStateException {
 }
 ```
 2. AbstractRefreshableApplicationContext.class
-```
+```Java
 /*
     通知子类刷新内部bean工厂，初始化BeanFactory并进行XML文件的解析、读取。obtain就是指获得的含义，这个方法obtaiinFreshBeanFactory正是实现BeanFactory的地方，也就是经过这个方法，ApplicationContext就已经拥有了BeanFactory的全部功能（也就是BeanFactory包含在了Spring容器里了）。
 */
@@ -246,7 +246,7 @@ protected final void refreshBeanFactory() throws BeansException {
 那么，person的属性是怎么被封装到beanFactory里面的呢？请看下面的源码解析。
 
 3. AbstractXmlApplicationContext.class
-```
+```Java
 protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
     //为给定的BeanFactory创建一个新的XmlBeanDefinitionReader
     XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
@@ -272,7 +272,7 @@ protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansE
 首先在refreshBeanFactory()方法中已经初始化了DefaultListableBeanFactory，对于读取XML配置文件，还需要使用XmlBeanDefinitionReader。所以在上述loadBeanDefinitions()中就需要初始化XmlBeanDefinitionReader。在DefaultListableBeanFactory和XmlBeanDefinitionReader后就可以进行配置文件的读取了。要注意的地方时，在XmlBeanDefinitionReader初始化时就已经把DefaultListableBeanFactory给注册进去了，所以在XmlBeanDefinitionReader读取的BeanDefinition都会注册到DefaultListableBeanFactory中，也就是经过上述的loadingBeanDefinitions()，类型DefaultListableBeanFactory的变量beanFactory就已经包含了所有**解析好的配置**了。
 
 4. AbstractBeanDefinitionReader.class
-```
+```Java
 @Override
 public int loadBeanDefinitions(String... locations) throws BeanDefinitionStoreException {
 	Assert.notNull(locations, "Location array must not be null");
@@ -321,7 +321,7 @@ public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualRe
 }
 ```
 5. PathMatchingResourcePatternResolver.class
-```
+```Java
 @Override
 public Resource[] getResources(String locationPattern) throws IOException {
 	Assert.notNull(locationPattern, "Location pattern must not be null");
@@ -352,7 +352,7 @@ public Resource[] getResources(String locationPattern) throws IOException {
 }
 ```
 6. XmlBeanDefinitionReader.class
-```
+```Java
 /*
     从XML配置文件中获取bean定义信息
 */
@@ -412,7 +412,7 @@ protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
 ![图片](https://note.youdao.com/yws/api/personal/file/861658D89B0D4B48A7ED56B554CF3028?method=download&shareKey=c3bc974e751495bac74d9ac9ec56cb75)
 
 1. XmlBeanDefinitionReader.class 
-```
+```Java
 /*
     注册给定DOM文档中包含的bean定义
 */
@@ -424,7 +424,7 @@ public int registerBeanDefinitions(Document doc, Resource resource) throws BeanD
 }
 ```
 2. DefaultBeanDefinitionDocumentReader.class
-```
+```Java
 /*
     此实现根据“spring-beans”XSD解析bean定义
 */
@@ -507,7 +507,7 @@ protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate d
 ```
 
 2. BeanDefinitionParserDelegate.class
-```
+```Java
 /*
     解析bean定义本身，而不考虑名称或别名，如果解析期间出错则返回null。
 */
@@ -640,7 +640,7 @@ public void parsePropertyElement(Element ele, BeanDefinition bd) {
 ![Images](https://note.youdao.com/yws/api/personal/file/CF65BB80EB934EBEBA49466CFAB261A0?method=download&shareKey=8b9f0078cf5a3171dfd69d00d9ba55f6)
 
 然后，就会一路返回到refresh()方法里的加载bean定义信息的方法——loadBeanDefinitions()，此时beanFactory里面就会存在一个带有KV对的ConcurrentHashMap，而这个beanFactory会存放在Spring容器里面。
-```
+```Java
 DefaultListableBeanFactory beanFactory = createBeanFactory();
 beanFactory.setSerializationId(getId());
 customizeBeanFactory(beanFactory);
@@ -673,7 +673,7 @@ bean的创建和初始化过程是在refresh方法里的invokeBeanFactoryPostPro
 ![Images](https://note.youdao.com/yws/api/personal/file/8B415614A97D45B481925159264C344F?method=download&shareKey=1083828cfcea581b0aa5cae56e3f3090)
 
 1. AbstractApplicationContext.class
-```
+```Java
 public void refresh() throws BeansException, IllegalStateException {
     ...
     // 实例剩余的（非懒加载）的单例
@@ -719,7 +719,7 @@ protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory b
 这里的懒加载的意思，指的是bean单例不是在Spring容器初始化的时候就创建的，而是在要使用该bean的时候，才会创建该bean。
 
 2. DefaultListableBeanFactory.class
-```
+```Java
 // 实例剩余的（非懒加载）的单例
 @Override
 public void preInstantiateSingletons() throws BeansException {
@@ -780,7 +780,7 @@ public void preInstantiateSingletons() throws BeansException {
 ```
 
 3. AbstractBeanFactory.class 
-```
+```Java
 protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
         // 去除name上存在的工厂bean的前缀
@@ -895,7 +895,7 @@ protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredTy
 ```
 
 4. DefaultSingletonBeanRegistry.class
-```
+```Java
 /*
     尝试从缓存中获取单例对象，如果缓存中有该单例对象，并且该对象正在被创建，则从缓存中获取。
 */
@@ -970,7 +970,7 @@ public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 ![Images](https://note.youdao.com/yws/api/personal/file/4C30C0DA143E422FBD27E50AE71AC179?method=download&shareKey=2f4dff65df0e9761ede47d26782dd977)
 
 5. AbstractAutowireCapableBeanFactory.class
-```
+```Java
 /*
     该类的中心方法：创建bean实例，实例化bean实例，应用bean的后置处理器
 

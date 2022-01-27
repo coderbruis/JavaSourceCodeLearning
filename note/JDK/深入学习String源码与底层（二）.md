@@ -26,7 +26,7 @@
 ### 1. String的equals方法
 
 String源码的equals方法如下：
-```
+```Java
     public boolean equals(Object anObject) {
         if (this == anObject) {
             return true;
@@ -55,7 +55,7 @@ String源码的equals方法如下：
 ### 2. String的hashcode方法
 
 String源码中hashcode方法如下：
-```
+```Java
     public int hashCode() {
         int h = hash;
         if (h == 0 && value.length > 0) {
@@ -70,7 +70,7 @@ String源码中hashcode方法如下：
     }
 ```
 在String类中，有个字段hash存储着String的哈希值，如果字符串为空，则hash的值为0。String类中的hashCode计算方法就是以31为权，每一位为字符的ASCII值进行运算，用自然溢出来等效取模，经过第一次的hashcode计算之后，属性hash就会赋哈希值。从源码的英文注释可以了解到哈希的计算公式：
-```
+```Java
 s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
 ```
 
@@ -78,7 +78,7 @@ s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
 
 这是一个很经典的话题了，下面来深入研究一下这两个方法。由上面的介绍，可以知道String的equals()方法实际比较的是两个字符串的内容，而String的hashCode()方法比较的是字符串的hash值，那么单纯的a.equals(b)为true，就可以断定a字符串等于b字符串了吗？或者单纯的a.hash == b.hash为true，就可以断定a字符串等于b字符串了吗？答案是否定的。
 比如下面两个字符串：
-```
+```Java
         String a = "gdejicbegh";
         String b = "hgebcijedg";
         System.out.println("a.hashcode() == b.hashcode() " + (a.hashCode() == b.hashCode()));
@@ -100,7 +100,7 @@ false
 
 ### 4. String的compareTo()方法
 
-```
+```Java
     public int compareTo(String anotherString) {
         int len1 = value.length;
         int len2 = anotherString.value.length;
@@ -124,7 +124,7 @@ false
 
 ### 5. String的startWith(String prefix)方法
 
-```
+```Java
     public boolean startsWith(String prefix) {
         return startsWith(prefix, 0);
     }
@@ -150,7 +150,7 @@ false
 如果参数字符序列是该字符串字符序列的前缀，则返回true；否则返回false；
 
 示例：
-```
+```Java
         String a = "abc";
         String b = "abcd";
         System.out.println(b.startsWith(a));
@@ -161,7 +161,7 @@ true
 ### 6. String的endsWith(String suffix)方法
 
 查看String的endsWith(String suffix)方法源码：
-```
+```Java
     public boolean endsWith(String suffix) {
         return startsWith(suffix, value.length - suffix.value.length);
     }
@@ -169,7 +169,7 @@ true
 其实endsWith()方法就是服用了startsWith()方法而已，传进的toffset参数值时value和suffix长度差值。
 
 示例：
-```
+```Java
         String a = "abcd";
         String b = "d";
         System.out.println(a.endsWith(b));
@@ -179,7 +179,7 @@ true
 
 ### 7. String的indexOf(int ch)方法
 
-```
+```Java
     public int indexOf(int ch) {
         return indexOf(ch, 0);
     }
@@ -209,7 +209,7 @@ true
 对于String的indexOf(int ch)方法，查看其源码可知其方法入参为ASCII码值，然后和目标字符串的ASCII值来进行比较的。其中常量Character.MIN_SUPPLEMENTARY_CODE_POINT表示的是0x010000——十六进制的010000，十进制的值为65536，这个值表示的是十六进制的最大值。
 
 下面再看看indexOfSupplementary(ch, fromIndex)方法
-```
+```Java
     private int indexOfSupplementary(int ch, int fromIndex) {
         if (Character.isValidCodePoint(ch)) {
             final char[] value = this.value;
@@ -228,7 +228,7 @@ true
 java中特意对超过两个字节的字符进行了处理，例如emoji之类的字符。处理逻辑就在indexOfSupplementary(int ch, int fromIndex)方法里。
 
 Character.class
-```
+```Java
     public static boolean isValidCodePoint(int codePoint) {
         // Optimized form of:
         //     codePoint >= MIN_CODE_POINT && codePoint <= MAX_CODE_POINT
@@ -238,7 +238,7 @@ Character.class
     
 ```
 对于方法isValidCodePoint(int codePoint)方法，用于确定指定代码点是否是一个有效的Unicode代码点。代码
-```
+```Java
 int plane = codePoint >>> 16;
 return plane < ((MAX_CODE_POINT + 1) >>> 16);
 ```
@@ -246,7 +246,7 @@ return plane < ((MAX_CODE_POINT + 1) >>> 16);
 
 ### 8. String的split(String regex, int limit)方法
 
-```
+```Java
     public String[] split(String regex, int limit) {
         char ch = 0;
         if (((regex.value.length == 1 &&
@@ -301,7 +301,7 @@ return plane < ((MAX_CODE_POINT + 1) >>> 16);
 split(String regex, int limit)方法内部逻辑非常复杂，需要静下心来分析。
 
 if判断中**第一个括号**先判断一个字符的情况，并且这个字符不是任何特殊的正则表达式。也就是下面的代码：
-```
+```Java
 (regex.value.length == 1 &&
              ".$|()[{^?*+\\".indexOf(ch = regex.charAt(0)) == -1)
 ```
@@ -309,17 +309,17 @@ if判断中**第一个括号**先判断一个字符的情况，并且这个字�
 
 
 在if判断中，**第二个括号**判断有两个字符的情况，并且如果这两个字符是以```\```开头的，并且不是字母或者数字的时候。如下列代码所示：
-```
+```Java
 (regex.length() == 2 && regex.charAt(0) == '\\' && (((ch = regex.charAt(1))-'0')|('9'-ch)) < 0 && ((ch-'a')|('z'-ch)) < 0 && ((ch-'A')|('Z'-ch)) < 0)
 ```
 判断完之后，在进行**第三个括号**判断，判断是否是两字节的unicode字符。如下列代码所示：
-```
+```Java
 (ch < Character.MIN_HIGH_SURROGATE ||
              ch > Character.MAX_LOW_SURROGATE)
 ```
 
 对于下面这段复杂的代码，我们结合示例一句一句来分析。
-```
+```Java
             int off = 0;
             int next = 0;
             boolean limited = limit > 0;
@@ -357,7 +357,7 @@ if判断中**第一个括号**先判断一个字符的情况，并且这个字�
 #### 8.2 源码分析2
 
 示例代码1：
-```
+```Java
         String splitStr1 = "what,is,,,,split";
         String[] strs1 = splitStr1.split(",");
         for (String s : strs1) {
@@ -375,7 +375,7 @@ split
 ```
 
 示例代码2：
-```
+```Java
         String splitStr1 = "what,is,,,,";
         String[] strs1 = splitStr1.split(",");
         for (String s : strs1) {
@@ -392,7 +392,7 @@ is
 
 
 示例代码3：
-```
+```Java
         String splitStr1 = "what,is,,,,";
         String[] strs1 = splitStr1.split(",", -1);
         for (String s : strs1) {
@@ -419,7 +419,7 @@ is
     o
 ```
 由于regex为','，所以满足if括号里的判断。一开始next和off指针都在0位置，limit为0，在while里的判断逻辑指的是获取','索引位置，由上图拆分的字符数组可知，next会分别为4,7,8,9,10。由于limited = limit > 0，得知limited为false，则逻辑会走到
-```
+```Java
                 if (!limited || list.size() < limit - 1) {
                     list.add(substring(off, next));
                     off = next + 1;
@@ -468,7 +468,7 @@ list集合里就会添加进空字符串""
 [what,is, , , ,]
 ```
 当程序走到时，
-```
+```Java
             if(!limited || list.size() < limit) {
                 list.add(substring(off, value.length);
             }
@@ -486,7 +486,7 @@ list集合里就会添加进空字符串""
 ```
 
 这里相信小伙伴们都知道示例1和示例2的区别在那里了，是因为示例2最后索引位置的list为空字符串，所以list.get(resultSize-1).length()为0，则会调用下面的代码逻辑：
-```
+```Java
                 while (resultSize > 0 && list.get(resultSize - 1).length() == 0) {
                     resultSize--;
                 }
@@ -504,7 +504,7 @@ list集合里就会添加进空字符串""
 就以示例代码一为例，对于字符串"what,is,,,,"。
 
 **对于limit > 0**，由于代码：
-```
+```Java
 boolean limited = limit > 0;  // limited为true
 ..
 ..
@@ -528,7 +528,7 @@ what,is,,,,
 
 
 **对于limit = 0**，由于代码：
-```
+```Java
             if (limit == 0) {
                 while (resultSize > 0 && list.get(resultSize - 1).length() == 0) {
                     resultSize--;
@@ -543,7 +543,7 @@ is
 ```
 
 **对于limit < 0**，由于代码：
-```
+```Java
 if (!limited || list.size() < limit)
     list.add(substring(off, value.length));
 ```

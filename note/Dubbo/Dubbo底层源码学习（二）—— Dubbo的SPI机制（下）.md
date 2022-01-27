@@ -12,7 +12,7 @@
 
 另外在@SPI注解的value值指定了扩展点默认的实现类名，例如SimpleExt注解由@SPI("impl1")修饰，则表示它的实现类名为：SimpleExtImpl1，查看SPI的配置文件可证：
 
-```
+```Java
 # Comment 1
 impl1=org.apache.dubbo.common.extension.ext1.impl.SimpleExtImpl1#Hello World
 impl2=org.apache.dubbo.common.extension.ext1.impl.SimpleExtImpl2  # Comment 2
@@ -24,13 +24,13 @@ Dubbo通过ExtensionLoader去加载上述SPI配置文件，然后读取到@SPI("
 Dubbo SPI的核心逻辑几乎都封装在ExtensionLoader之中，ExtensionLoader存放于dubbo-common模块的extension保重，功能类似于JDK SPI中的java.util.ServiceLoader。
 
 下面展示了ExtensionLoader最常用的使用方式：
-```
+```Java
 SimpleExt ext = ExtensionLoader.getExtensionLoader(SimpleExt.class).getDefaultExtension();
 ```
 
 首先时调用ExtensionLoader#getExtensionLoader(SimpleExt.class)，来获取SimpleExt类型的ExtensionLoader。查看ExtensionLoader源码如下：
 
-```
+```Java
     public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
         if (type == null) {
             throw new IllegalArgumentException("Extension type == null");
@@ -51,11 +51,11 @@ SimpleExt ext = ExtensionLoader.getExtensionLoader(SimpleExt.class).getDefaultEx
         }
         return loader;
     }
-```
+```Java
 getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经缓存了该类型的扩展点加载器，如果没有则new一个该类型的ExtensionLoader并添加进EXTENSION_LOADERS中。但需要注意的是ExtensionLoader的构造方法
 中，是会先创建默认的ExtensionFactory类型的ExtensionLoader对象，然后调用getAdaptiveExtension()方法创建适配类型的扩展点实现类。
 
-```
+```Java
     private ExtensionLoader(Class<?> type) {
         this.type = type;
         // 从此处可以知道，对于默认的ExtensionFactory.class来说，是没有objectFactory熟悉对象值的
@@ -68,7 +68,7 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
 被赋值为AdaptiveExtensionFactory。
 
 下面看下getExtensionClass()方法的逻辑
-```
+```Java
     private Class<?> getExtensionClass(String name) {
         if (type == null) {
             throw new IllegalArgumentException("Extension type == null");
@@ -81,7 +81,7 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
     }
 ```
 
-```
+```Java
     private Map<String, Class<?>> getExtensionClasses() {
         Map<String, Class<?>> classes = cachedClasses.get();
         // 双重检测，防止并发环境下指令重排序，cachedClasses是static类型
@@ -99,7 +99,7 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
     }
 ```
 
-```
+```Java
     private Map<String, Class<?>> loadExtensionClasses() {
         // 缓存默认的扩展点名称，这里会去读取@SPI注解
         cacheDefaultExtensionName();
@@ -140,7 +140,7 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
     }
 ```
 
-```
+```Java
     // 加载SPI配置文件目录
     private void loadDirectory(Map<String, Class<?>> extensionClasses, String dir, String type,
                                boolean extensionLoaderClassLoaderFirst, boolean overridden, String... excludedPackages) {
@@ -173,7 +173,7 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
     }
 ```
 
-```
+```Java
     private void loadClass(Map<String, Class<?>> extensionClasses, java.net.URL resourceURL, Class<?> clazz, String name,
                            boolean overridden) throws NoSuchMethodException {
         if (!type.isAssignableFrom(clazz)) {
@@ -218,7 +218,7 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
 ![SPI_ADAPTIVE](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/Dubbo/spi_@Adaptive.png)
 
 在ExtensionFactory接口上有@SPI注解修饰，而Dubbo会在调用ExtensionFactory时，会去调用ExtensionFactory的SPI配置文件中的扩展点名称以及扩展点实现类，查看下其SPI配置文件：
-```
+```Java
 adaptive=org.apache.dubbo.common.extension.factory.AdaptiveExtensionFactory
 spi=org.apache.dubbo.common.extension.factory.SpiExtensionFactory
 ```
@@ -232,7 +232,7 @@ AdaptiveExtensionFactory会根据运行时状态来决定给ExtensionFactory赋�
 
 下面看下AdaptiveExtensionFactory类：
 
-```
+```Java
 @Adaptive
 public class AdaptiveExtensionFactory implements ExtensionFactory {
 
@@ -275,7 +275,7 @@ public class AdaptiveExtensionFactory implements ExtensionFactory {
 
 
 下面看看ExtensionLoader的方法：
-```
+```Java
     private Class<?> getAdaptiveExtensionClass() {
         // 获取扩展点实现类，如果缓存中没有则去扫描SPI文件，扫描到扩展点实现类后则存入cachedClasses缓存中
         getExtensionClasses();            // ------------------------ ② 
@@ -325,7 +325,7 @@ public class AdaptiveExtensionFactory implements ExtensionFactory {
 的扩展点实现类，就会去通过Javassist来生成代理代码，即生成对于的Xxx@Adaptive代码。
 
 下面就是通过Javassist代理生产的适配类。（再Dubbo源码中的dubbo-common模块test目录下的org.apache.dubbo.extension包中有对应的测试类）
-```
+```Java
 package org.apache.dubbo.common.extension.ext1;
 
 import org.apache.dubbo.common.extension.ExtensionLoader;

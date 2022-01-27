@@ -79,7 +79,7 @@ SpringBoot集成SpringSecurity需要配置几个配置文件，并且需要几�
 
 #### 3.1 @EnableWebSecurity
 @EnableWebSecurity是Spring Security用于启用Web安全的注解。典型的用法是该注解用在某个Web安全配置类上(实现了接口WebSecurityConfigurer或者继承自WebSecurityConfigurerAdapter)。
-```
+```Java
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -124,7 +124,7 @@ Spring Security默认是禁用注解的，要想开启注解，需要在继承We
 
 #### 4.1 认证
 在SpringSecurity中，用于认证的主要接口是AuthenticationManager，它只有一个方法：
-```
+```Java
 public interface AuthenticationManager {
   Authentication authenticate(Authentication authentication)
     throws AuthenticationException;
@@ -135,7 +135,7 @@ AuthenticationManger最普遍的实现类是ProviderManager，而ProviderManager
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200714010510964.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200714010535442.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
 AuthenticationProvider接口和AuthenticationManager相似，但是它有一个额外的方法允许查询它支持的Authentication方式：
-```
+```Java
 public interface AuthenticationProvider {
 	Authentication authenticate(Authentication authentication)
 			throws AuthenticationException;
@@ -150,7 +150,7 @@ public interface AuthenticationProvider {
 一旦认证成功，我们就可以进行授权了，它核心的策略就是AccessDecisionManager。同样的，它将授权逻辑全部委托给AccessDecisionVoter来实现。
 
 一个AccessDecisionVoter考虑一个Authentication（代表一个Principal）和一个被ConfigAttributes装饰的安全对象，这里的ConfigAttributes就是一个包含了URL以及这个URL该有权限的对象的集合。
-```
+```Java
 boolean supports(ConfigAttribute attribute);
 
 boolean supports(Class<?> clazz);

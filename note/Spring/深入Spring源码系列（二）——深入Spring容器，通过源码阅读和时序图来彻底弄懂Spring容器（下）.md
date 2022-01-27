@@ -84,7 +84,7 @@ IOC容器的启动过程就是建立Spring上下文的过程，该上下文是�
 结合着时序图，再去调试源码，思路会清晰很多。
 
 ContextLoaderListener.class
-```
+```Java
 public class ContextLoaderListener extends ContextLoader implements ServletContextListener {
 
 	public ContextLoaderListener() {
@@ -117,7 +117,7 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 这里的ContextLoaderListener是Spring的类，但实现了ServletContextListener接口。这个接口是Servlet API中定义的，提供了与Servlet生命周期结合的回调，也就是说Servlet调用contextInitialized()方法初始化容器时，会回调ContextLoaderListener中实现的contextInitialized()方法，Servlet中的contextDestroyed()方法也同理。观察源码可知，在Web容器中，建立WebApplicationContext的过程是在contextInitialized()方法中完成的。
 
 ContextLoader.class
-```
+```Java
 public WebApplicationContext initWebApplicationContext(ServletContext servletContext) {
        ...
     // 判断在web容器中是否存在WebApplicationContext，因为在配置中只允许申明一次ServletContextListener，多次声明会扰乱Spring的执行逻辑。
@@ -168,7 +168,7 @@ public WebApplicationContext initWebApplicationContext(ServletContext servletCon
 由ContextLoader的源码可知，SpringIOC的载入过程是在ContextLoader类的initWebApplicationContext()方法中完成的。
 
 这里还要介绍一个重要的接口——WebApplicationContext
-```
+```Java
 public interface WebApplicationContext extends ApplicationContext {
 
 	/**
@@ -184,7 +184,7 @@ public interface WebApplicationContext extends ApplicationContext {
 }
 ```
 而WebApplicationContext接口是由XMLWebApplicationContext来实现具体的功能，然后再通过ApplicationContext接口与BeanFactory接口对接，完成Spring容器的功能。然而对于具体的一些Spring容器的实现都是在AbstractRefreshableWebApplicationContext中完成的，这一点和**上篇**讲解的AbstractRefreshableConfigApplicationContext功能类似。initWebApplicationContext()方法最后返回的是一个WebApplicationContext接口，而实际返回的就是XMLWebApplicationContext实现类。XMLWebApplicationContext在基本的ApplicationContext功能的基础上，增加了对**Web环境**和XML配置定义的处理。在XMLWebApplicationContext的初始化过程中，Web容器中的IOC容器被建立起来，从而再整个Web容器中建立起Spring应用。
-```
+```Java
 public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationContext {
 
 	/** 默认读取Spring配置文件的根路径，如果指定其他配置文件，则从这个默认的根路径读取。 */
@@ -234,7 +234,7 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
 从源码中可以看到，XMLWebApplicationContext中成员变量存放着默认的读取Spring配置文件的根目录，在生成IOC容器过程中，就会从默认路径/WEB-INF/applicationContext.xml配置文件中或者指定的配置文件路径获取，然后再通过熟悉的loadBeanDefinitions()方法来获取Bean定义信息，最终完成整个上下文的初始化过程。
 
 ContextLoader.class
-```
+```Java
 protected WebApplicationContext createWebApplicationContext(ServletContext sc) {
     // 这里判断使用什么样的类在Web容器中作为IOC容器
 	Class<?> contextClass = determineContextClass(sc);
@@ -274,7 +274,7 @@ protected Class<?> determineContextClass(ServletContext servletContext) {
 下面看看默认的IOC容器是什么。有图有真相：
 ![image](https://note.youdao.com/yws/api/personal/file/AB1007BC2A7549D7898417D6231AE4E3?method=download&shareKey=e851d344aedd461f319dba3b8e2c6fe8)
 
-```
+```Java
 protected void configureAndRefreshWebApplicationContext(ConfigurableWebApplicationContext wac, ServletContext sc) {
 	if (ObjectUtils.identityToString(wac).equals(wac.getId())) {
 		String idParam = sc.getInitParameter(CONTEXT_ID_PARAM);

@@ -34,7 +34,7 @@ dubbo://172.17.32.91:20880/org.apache.dubbo.demo.DemoService?anyhost=true&applic
 
 先看下Dubbo中org.apache.dubbo.common包下的URL类源码：
 
-```
+```Java
 public /*final**/
 class URL implements Serializable {
 

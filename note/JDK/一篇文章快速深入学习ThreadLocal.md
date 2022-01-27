@@ -108,7 +108,7 @@
 #### 2.1 ThreadLocal内部使用了哪些数据结构？
 首先，我们来看下ThreadLocal中几个比较重要的数据结构。
 
-```
+```Java
 /**
  * 用于ThreadLocal内部ThreadLocalMap数据结构的哈希值，用于降低哈希冲突。
  */
@@ -135,7 +135,7 @@ private static int nextHashCode() {
 
 下面将是ThreadLocal最终要的一个数据结构：ThreadLocalMap
 
-```
+```Java
 /**
  * ThreadLocalMap其实就是一个用于ThreadLocal的自定义HashMap，它和HashMap很像。在其内部有一个自定义的Entry类，
  * 并且有一个Entry数组来存储这个类的实例对象。类似于HashMap，ThreadLocalMap同样的拥有初始大小，拥有扩容阈值。
@@ -197,7 +197,7 @@ static class ThreadLocalMap {
 
 下面回到关于ThreadLocal源码的介绍，先看看set()和get()方法源码：
 
-```
+```Java
 	// ThreadLocal中的set()方法
 	public void set(T value) {
         Thread t = Thread.currentThread();
@@ -244,7 +244,7 @@ static class ThreadLocalMap {
 
 
 
-```
+```Java
 	public T get() {
 		// 获取当前线程
         Thread t = Thread.currentThread();
@@ -280,7 +280,7 @@ static class ThreadLocalMap {
 
 知道怎么存储以及获取ThreadLocal之后，还要知道怎么清除ThreadLocal，防止内存泄漏，下面看下remove()源码：
 
-```
+```Java
 	// ThreadLocal的remove()方法
 	public void remove() {
 		// 获取当前线程中的ThreadLocalMap

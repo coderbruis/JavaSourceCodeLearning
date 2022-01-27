@@ -14,7 +14,7 @@
 #### 1.1 引入简单的CGLIB例子
 
 在讲解CGLIB动态代理之前，先看一下最简单的CGLIB动态代理的例子。
-```
+```Java
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
@@ -71,7 +71,7 @@ com.bruis.learnaop.testcglibaop.EnhancerDemo$$EnhancerByCGLIB$$413eae0d@53e25b76
 
 回到SpringAOP源码。在《深入学习SpringAOP源码（二）》中，介绍到DefaultAopProxyFactory源码部分
 
-```
+```Java
 public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
     public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
         if (!config.isOptimize() && !config.isProxyTargetClass() && !this.hasNoUserSuppliedProxyInterfaces(config)) {
@@ -88,7 +88,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 }
 ```
 从createAopProxy()源码中可以看到，创建SpringAOP有两种方式，一、JDK动态代理；二、CGLIB动态代理；点进ObjenesisCglibAopProxy源码，发现它继承了CglibAopFactory
-```
+```Java
 class ObjenesisCglibAopProxy extends CglibAopProxy {
     protected Object createProxyClassAndInstance(Enhancer enhancer, Callback[] callbacks) {
         // 通过增强器获取代理类的class对象
@@ -122,7 +122,7 @@ class ObjenesisCglibAopProxy extends CglibAopProxy {
 createProxyClassAndInstance方法和前面总结的CGLIB创建代理的步骤一样。
 
 继续查看CglibAopProxy是如何准备Enhancer增强器以及创建拦截器链的。
-```
+```Java
 class CglibAopProxy implements AopProxy, Serializable {
     public Object getProxy(@Nullable ClassLoader classLoader) {
         if (logger.isTraceEnabled()) {
@@ -229,7 +229,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 #### 1.3 DynamicAdvisedInterceptor都做了些啥工作？
 
-```
+```Java
     private static class DynamicAdvisedInterceptor implements MethodInterceptor, Serializable {
         @Nullable
         public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
@@ -280,7 +280,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 #### 1.4 啥是拦截器链？拦截器链从哪获取？
 
 啥是拦截器链？从哪获取拦截器链？下面继续深入DefaultAdvisorChainFactory方法的getInterceptorsAndDynamicInterceptionAdvice()方法
-```
+```Java
 public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializable {
     public List<Object> getInterceptorsAndDynamicInterceptionAdvice(Advised config, Method method, @Nullable Class<?> targetClass) {
         /*
@@ -371,7 +371,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 
 
 在这过程中，DefaultAdvisorAdapterRegistry扮演者非常关键的角色。
-```
+```Java
 public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Serializable {
     private final List<AdvisorAdapter> adapters = new ArrayList(3);
     
@@ -451,7 +451,7 @@ DefaultAdvisorAdapterRegistry类主要负责：
 #### 1.5 调用拦截器链的proceed方法
 
 视线回到DynamicAdvisedInterceptor的intercept方法，在
-```
+```Java
 List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 ```
 执行完成之后，chain中存放好了拦截器链，分别是
@@ -460,7 +460,7 @@ List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(me
 3. AspectJAroundAdvice
 4. MethodBeforeAdviceInterceptor
 
-```
+```Java
     List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
     Object retVal;
     if (chain.isEmpty() && Modifier.isPublic(method.getModifiers())) {
@@ -477,7 +477,7 @@ List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(me
 
 **后置通知实现逻辑：**
 
-```
+```Java
 public class AspectJAfterAdvice extends AbstractAspectJAdvice implements MethodInterceptor, AfterAdvice, Serializable {
     public Object invoke(MethodInvocation mi) throws Throwable {
         Object var2;
@@ -492,7 +492,7 @@ public class AspectJAfterAdvice extends AbstractAspectJAdvice implements MethodI
 }
 ```
 
-```
+```Java
 public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Cloneable {
     
     protected final Object proxy;
@@ -535,7 +535,7 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 
 **环绕通知实现逻辑：**
 
-```
+```Java
 public class AspectJAroundAdvice extends AbstractAspectJAdvice implements MethodInterceptor, Serializable {
     public Object invoke(MethodInvocation mi) throws Throwable {
         if (!(mi instanceof ProxyMethodInvocation)) {
@@ -553,7 +553,7 @@ public class AspectJAroundAdvice extends AbstractAspectJAdvice implements Method
     }
 }
 ```
-```
+```Java
 public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedenceInformation, Serializable {
     protected Object invokeAdviceMethod(JoinPoint jp, @Nullable JoinPointMatch jpMatch, @Nullable Object returnValue, @Nullable Throwable t) throws Throwable {
         return this.invokeAdviceMethodWithGivenArgs(this.argBinding(jp, jpMatch, returnValue, t));
@@ -582,7 +582,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 3. invokeAdviceMethodWithGivenArgs方法调用aspectJAdviceMethod.invoke方法，调用AspectJTest类中aroundTest方法
 
 **前置通知实现逻辑：**
-```
+```Java
 public class MethodBeforeAdviceInterceptor implements MethodInterceptor, BeforeAdvice, Serializable {
     private final MethodBeforeAdvice advice;
     

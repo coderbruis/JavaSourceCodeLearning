@@ -31,14 +31,14 @@ SpringFactoriesLoader通过loadFactories方法来加载并实例化来自FACTORI
 ### 2. 上源码
 &emsp;首先，可以看到SpringFactoriesLoader是final类，final修饰的类是不可以被继承，类中的方法都是不可以被覆盖的，且默认都是final修饰的方法，可以猜想到SpringFactoriesLoader类在被设计之初，是不想开发者继承该类并对该类进行扩展。所以，如果在开发中不想让别人对你的类继承或者扩展，那就用final来修饰吧~~
 
-```
+```Java
 public final class SpringFactoriesLoader {
 }
 ```
 
 下面看下SpringFactoriesLoader类有哪些成员变量？
 
-```
+```Java
 	/**
 	 * 寻找工厂的位置
 	 * 工厂可以存放在多个jar文件中
@@ -53,7 +53,7 @@ public static final String FACTORIES_RESOURCE_LOCATION = "META-INF/spring.factor
 
 在spring.factories文件中，有非常多的工厂类，包括了属性源加载器、错误报告器、容器初始化器、容器监听器等，这些工厂类在SpringBoot中都有非常重要的作用，具体的读者可以自行前往查看。
 
-```
+```Java
 // 自定义的用于存储工厂的缓存
 private static final Map<ClassLoader, MultiValueMap<String, String>> cache = new ConcurrentReferenceHashMap<>();
 
@@ -89,7 +89,7 @@ private static final Map<ClassLoader, MultiValueMap<String, String>> cache = new
 &emsp;loadFactories方法通过类加载器来加载并且实例化FACTORIES_RESOURCE_LOCATION路径文件中定义的工厂实现。在返回工厂之前，都会通过AnnotationAwareOrderComparator这个类来进行排序。如果需要自定义实例化策略，请使用loadFactoryNames去获取所有注册的工厂名称。
 &emsp;loadFactories方法中，入参factoryType表示工厂类的接口或者抽象类；入参classLoader表示加载工厂的类加载器，如果为空则会使用默认的类加载器。
 
-```
+```Java
 public static <T> List<T> loadFactories(Class<T> factoryType, @Nullable ClassLoader classLoader) {
 		Assert.notNull(factoryType, "'factoryType' must not be null");
 		// 类加载器
@@ -114,7 +114,7 @@ public static <T> List<T> loadFactories(Class<T> factoryType, @Nullable ClassLoa
 	}
 ```
 
-```
+```Java
 	private static <T> T instantiateFactory(String factoryImplementationName, Class<T> factoryType, ClassLoader classLoader) {
 		try {
 			// 通过classUtils工具类获取工厂实现类的Class对象
@@ -147,7 +147,7 @@ public static <T> List<T> loadFactories(Class<T> factoryType, @Nullable ClassLoa
 #### 2.2 loadFactoryNames方法
 &emsp;由于loadFactoryNames方法的注释和loadFactories内容一样，所以这里就不写出来了。
 
-```
+```Java
 	public static List<String> loadFactoryNames(Class<?> factoryType, @Nullable ClassLoader classLoader) {
 		// 获取到factoryType工厂类型
 		String factoryTypeName = factoryType.getName();
@@ -156,7 +156,7 @@ public static <T> List<T> loadFactories(Class<T> factoryType, @Nullable ClassLoa
 	}
 ```
 
-```
+```Java
 	private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoader classLoader) {
 		// 从缓存中获取已经加载过的SpringFactories
 		MultiValueMap<String, String> result = cache.get(classLoader);
@@ -216,4 +216,4 @@ public static <T> List<T> loadFactories(Class<T> factoryType, @Nullable ClassLoa
 
 > 觉得作者写的不错的点个赞，关注作者。
 > 本文 Github https://github.com/coderbruis/JavaSourceLearning 已收录，更多源码文章以及源码在github中可以学习。
- 
+
