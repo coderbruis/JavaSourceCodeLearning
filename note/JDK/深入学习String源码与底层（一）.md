@@ -112,7 +112,7 @@ JAVA的运行时数据区包括以下几个区域：
 2. Java堆区（Heap）
 3. 本地方法栈（Native Method Stack）
 4. 虚拟机栈（VM Stack）
-5. 程序技术器（Program Conter Register）
+5. 程序计数器（Program Conter Register）
 
 具体内容不在这里进行介绍。为方便读者能够理解下面的内容，请学习下[总结Java内存区域和常量池](https://blog.csdn.net/CoderBruis/article/details/85240273)
 
