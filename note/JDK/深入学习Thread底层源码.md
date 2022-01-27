@@ -50,7 +50,7 @@
 #### 3.1 线程优先级
 
 优先级代表线程执行的机会的大小，优先级高的可能先执行，低的可能后执行，在 Java 源码中，优先级从低到高分别是 1 到 10，线程默认 new 出来的优先级都是 5，源码如下：
-```
+```Java
 // 最低优先级
 public final static int MIN_PRIORITY = 1;
 
@@ -75,7 +75,7 @@ public final static int MAX_PRIORITY = 10;
 
 #### 4.1 start 启动线程
 
-```
+```Java
 // 该方法可以创建一个新的线程出来
 public synchronized void start() {
     // 如果没有初始化，抛异常
@@ -111,7 +111,7 @@ private native void start0();
 
 下面只贴出部分关键源码：
 
-```
+```Java
 // 无参构造器，线程名字自动生成
 public Thread() {
     init(null, null, "Thread-" + nextThreadNum(), 0);
@@ -161,13 +161,13 @@ private void init(ThreadGroup g, Runnable target, String name,
 
 当我们调用某个线程的这个方法时，这个方法会挂起调用线程，直到被调用线程结束执行，调用线程才会继续执行。
 
-```
+```Java
     public final void join() throws InterruptedException {
         join(0);
     }
 ```
 
-```
+```Java
     public final synchronized void join(long millis)
     throws InterruptedException {
         long base = System.currentTimeMillis();
@@ -206,7 +206,7 @@ private void init(ThreadGroup g, Runnable target, String name,
 
 yield 是个 native 方法，底层代码如下：
 
-```
+```Java
 public static native void yield();
 ```
 
@@ -220,7 +220,7 @@ sleep 也是 native 方法，可以接受毫秒的一个入参，也可以接受
 
 接受毫秒和纳秒两个入参时，如果给定纳秒大于等于 0.5 毫秒，算一个毫秒，否则不算。
 
-```
+```Java
     public static void sleep(long millis, int nanos)
     throws InterruptedException {
         if (millis < 0) {
@@ -239,7 +239,7 @@ sleep 也是 native 方法，可以接受毫秒的一个入参，也可以接受
         sleep(millis);
     }
 ```
-```
+```Java
 public static native void sleep(long millis) throws InterruptedException;
 ```
 
@@ -252,7 +252,7 @@ interrupt 中文是打断的意思，意思是可以打断中止正在运行的�
 
 我们举一个例子来说明如何打断 WAITING 的线程，代码如下：
 
-```
+```Java
 @Test
 public void testInterrupt() throws InterruptedException {
   Thread thread = new Thread(new Runnable() {

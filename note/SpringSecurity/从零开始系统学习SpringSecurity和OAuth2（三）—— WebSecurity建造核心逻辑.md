@@ -21,14 +21,14 @@ SpringSecurity通过SecurityConfigurer来建造FilterChainProxy，建造前还�
 
 在AbstractConfiguredSecurityBuilder类中，看下安全配置类的定义：‘
 
-```
+```Java
 private final LinkedHashMap<Class<? extends SecurityConfigurer<O, B>>, List<SecurityConfigurer<O, B>>> configurers = new LinkedHashMap<Class<? extends SecurityConfigurer<O, B>>, List<SecurityConfigurer<O, B>>>();
 ```
 这是定义的安全配置器的子类Map集合，这个configurers就是用于初始化以及配置FilterChainProxy中的filters用的。Map集合中，Key是SecurityConfigurer的子类的Class类型，Value是SecurityConfigurer的list集合。
 
 作为一个成员变量，自然会有方法从外部注入安全配置类。在AbstractConfiguredSecurityBuilder的类中，定义了add方法。
 
-```
+```Java
 	private <C extends SecurityConfigurer<O, B>> void add(C configurer) throws Exception {
 		Assert.notNull(configurer, "configurer cannot be null");
 		// 获取安全配置类的Class类型
@@ -64,7 +64,7 @@ private final LinkedHashMap<Class<? extends SecurityConfigurer<O, B>>, List<Secu
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2020080918440196.png)
 
 看下apply方法
-```
+```Java
 	// 传入的C是SecurityConfigurerAdapter的子类，
 	public <C extends SecurityConfigurerAdapter<O, B>> C apply(C configurer)
 			throws Exception {
@@ -82,7 +82,7 @@ private final LinkedHashMap<Class<? extends SecurityConfigurer<O, B>>, List<Secu
 继续查看apply方法有哪些地方调用了的
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200809224904457.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
 图上的HttpSecurity的getOrApply方法值得注意一下，查看其方法
-```
+```Java
 	private <C extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>> C getOrApply(
 			C configurer) throws Exception {
 		// 从configurers集合中获取安全配置类
@@ -106,7 +106,7 @@ getOrApply方法主要是从configurers集合中获取配置类，如果存在�
 
 找了一圈，发现configure的实现是在ExpressionUrlAuthorizationConfigurer的抽象父类AbstractInterceptUrlConfigurer定义的。
 
-```
+```Java
 	@Override
 	public void configure(H http) throws Exception {
 		// 创建元数据，该抽象方法由ExpressionUrlAuthorizationConfigurer定义，返回一个ExpressionBasedFilterInvocationSecurityMetadataSource对象
@@ -138,7 +138,7 @@ getOrApply方法主要是从configurers集合中获取配置类，如果存在�
 ### 2. AbstractConfiguredSecurityBuilder的doBuild()方法
 随着configurers集合元素的注入，下面就是进行建造工作，调用doBuild()方法。
 
-```
+```Java
 	@Override
 	protected final O doBuild() throws Exception {
 		synchronized (configurers) {
@@ -173,14 +173,14 @@ getOrApply方法主要是从configurers集合中获取配置类，如果存在�
 
 ```
 beforeInit()和beforeConfigure()是一个空方法体，没有逻辑。
-```
+```Java
 	protected void beforeInit() throws Exception {
 	}
 	protected void beforeConfigure() throws Exception {
 	}
 ```
 
-```
+```Java
 	private void init() throws Exception {
 		// 调用getConfigurers()方法获取this.configurers的所有value值，并以List集合的形式返回
 		Collection<SecurityConfigurer<O, B>> configurers = getConfigurers();
@@ -201,7 +201,7 @@ beforeInit()和beforeConfigure()是一个空方法体，没有逻辑。
 
 **接着就是configure()方法的调用**
 
-```
+```Java
 	private void configure() throws Exception {
 		// 调用getConfigurers()方法获取this.configurers的所有value值，并以List集合的形式返回
 		Collection<SecurityConfigurer<O, B>> configurers = getConfigurers();
@@ -217,7 +217,7 @@ beforeInit()和beforeConfigure()是一个空方法体，没有逻辑。
 
 经过init()和configure()方法的执行，以及可以开始进行建造工作了，因而调用performBuild()方法执行建造过程。
 
-```
+```Java
 	protected abstract O performBuild() throws Exception;
 ```
 可以看到在AbstractConfiguredSecurityBuilder中，performBuild是以抽象方法的形式存在的，所以实现逻辑都在其子类中。
@@ -242,7 +242,7 @@ WebSecurity用于建造FilterChainProxy，WebSecurity是包含HttpSecurity的一
 ### 3. WebSecurity中的performBuild()方法
 WebSecurity重写了AbstractConfiguredSecurityBuilder的perfomBuild()方法，核心逻辑如下：
 
-```
+```Java
 	@Override
 	protected Filter performBuild() throws Exception {
 		Assert.state(

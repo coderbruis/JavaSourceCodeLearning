@@ -30,7 +30,7 @@
 #### 1.1 String的修饰符与实现类
 
 打开String源码，可以看到String类的由final修饰的，并且实现了Serializable，Comparable，CharSequence接口。
-```
+```Java
 public final class String
     implements java.io.Serializable, Comparable<String>, CharSequence {
 }
@@ -41,7 +41,7 @@ public final class String
 
 #### 1.2 String类的成员变量
 
-```
+```Java
 public final class String
     implements java.io.Serializable, Comparable<String>, CharSequence {
     
@@ -66,7 +66,7 @@ hash值将用于String类的hashCode()方法的计算，这里先不作具体讲
 
 ##### 1.2.4 serialPersistentFields属性
 了解过JAVA序列化的，应该清楚transient是用于指定哪个字段不被默认序列化，对于不需要序列化的属性直接用transient修饰即可。而serialPersistentFields用于指定哪些字段需要被默认序列化，具体用法如下：
-```
+```Java
 private static final ObjectStreamField[] serialPersistentFields = {
     new ObjectStreamField("name", String.class),
     new ObjectStreamField("age", Integer.Type)
@@ -77,15 +77,15 @@ private static final ObjectStreamField[] serialPersistentFields = {
 #### 1.3 创建String对象
 
 1. 直接使用""，换句话说就是使用"字面量"赋值
-    ```
+    ```Java
     String name = "bruis";
     ```
 2. 使用连接符"+"来赋值
-    ```
+    ```Java
     String name = "ca" + "t";
     ```
 3. 使用关键字new来创建对象
-    ```
+    ```Java
     String name = new String("bruis");
     ```
 4. 除了上面最常见的几种创建String对象的方式外，还有以下方法可以创建String对象
@@ -112,7 +112,7 @@ JAVA的运行时数据区包括以下几个区域：
 2. Java堆区（Heap）
 3. 本地方法栈（Native Method Stack）
 4. 虚拟机栈（VM Stack）
-5. 程序技术器（Program Conter Register）
+5. 程序计数器（Program Conter Register）
 
 具体内容不在这里进行介绍。为方便读者能够理解下面的内容，请学习下[总结Java内存区域和常量池](https://blog.csdn.net/CoderBruis/article/details/85240273)
 
@@ -126,7 +126,7 @@ JAVA的运行时数据区包括以下几个区域：
 
 #### 2.2 String与JAVA内存区域
 下面看看使用""和new的方式创建的字符串在底层都发生了些什么
-```
+```Java
     public class TestString {
 	public static void main(String[] args) {
 		String name = "bruis";
@@ -296,7 +296,7 @@ SourceFile: "TestString.java"
 ```
 
 这里有一个需要注意的地方，在java中使用"+"连接符时，一定要注意到"+"的连接符效率非常低下，因为"+"连接符的原理就是通过StringBuilder.append()来实现的。所以如：String name = "a" + "b";在底层是先new 出一个StringBuilder对象，然后再调用该对象的append()方法来实现的，调用过程等同于：
-```
+```Java
 // String name = "a" + "b";
 String name = new StringBuilder().append("a").append("b").toString();
 ```
@@ -307,7 +307,7 @@ String name = new StringBuilder().append("a").append("b").toString();
 官方文档解释为字符串常量池由String独自维护，当调用intern()方法时，如果字符串常量池中包含该字符串，则直接返回字符串常量池中的字符串。否则将此String对象添加到字符串常量池中，并返回对此String对象的引用。
 
 下面先看看这几句代码，猜猜结果是true还是false
-```
+```Java
         String a1 = new String("AA") + new String("BB");
         System.out.println("a1 == a1.intern() " + (a1 == a1.intern()));
         
@@ -325,7 +325,7 @@ String name = new StringBuilder().append("a").append("b").toString();
 使用字面量的方式创建字符串，要分两种情况。
 
 ① 如果字符串常量池中没有值，则直接创建字符串，并将值存入字符串常量池中；
-```
+```Java
 String name = "bruis";
 ```
 对于字面量形式创建出来的字符串，JVM会在编译期时对其进行优化并将字面量值存放在字符串常量池中。运行期在虚拟机栈栈帧中的局部变量表里创建一个name局部变量，然后指向字符串常量池中的值，如图所示：
@@ -335,7 +335,7 @@ String name = "bruis";
 
 
 2. 使用new的方式创建字符串
-```
+```Java
 String name = new String("bruis");
 ```
 首先在堆中new出一个对象，然后常量池中创建一个指向堆中"bruis"的引用。
@@ -343,7 +343,7 @@ String name = new String("bruis");
 
 
 ##### 2.3.2 解析
-```
+```Java
         /**
         * 首先对于new出的两个String()对象进行字符串连接操作，编译器无法进行优化，只有等到运行期期间，通过各自的new操作创建出对象之后，然后使		    用"+"连接符拼接字符串，再从字符串常量池中创建三个分别指向堆中"AA"、"BB"，而"AABB"是直接在池中创建的字面量值，这一点可以通过类的反编译来证明，这里就不具体展开了。
 		*/

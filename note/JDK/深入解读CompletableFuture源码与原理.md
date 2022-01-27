@@ -43,7 +43,7 @@ CompletableFuture类提供了非常多的方法供我们使用，包括了runAsy
 
 **runAsync()**，异步运行，
 
-```
+```Java
 @Test
     public void runAsyncExample() throws Exception {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -77,7 +77,7 @@ CompletedFuture...isDown
 **supplyAsync()**
 
 supply有供应的意思，supplyAsync就可以理解为异步供应，查看supplyAsync()方法入参可以知道，其有两个入参：
-- Supplier<U> supplier,
+- Supplier\<U\> supplier,
 - Executor executor
  
 这里先简单介绍下Supplier接口，Supplier接口是JDK8引入的新特性，它也是用于创建对象的，只不过调用Supplier的get()方法时，才会去通过构造方法去创建对象，并且每次创建出的对象都不一样。Supplier常用语法为：
@@ -85,7 +85,7 @@ supply有供应的意思，supplyAsync就可以理解为异步供应，查看sup
 Supplier<MySupplier> sup= MySupplier::new;
 ```
 再展示代码例子之前，再讲一个thenAccept()方法，可以发现thenAccept()方法的入参如下：
-- Comsumer<? super T>
+- Comsumer\<? super T\>
 
 Comsumer接口同样是java8新引入的特性，它有两个重要接口方法：
 1. accept()
@@ -94,7 +94,7 @@ Comsumer接口同样是java8新引入的特性，它有两个重要接口方法�
 thenAccept()可以理解为接收CompletableFuture的结果然后再进行处理。
 
 下面看下supplyAsync()和thenAccept()的例子：
-```
+```Java
 public void thenApply() throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         CompletableFuture cf = CompletableFuture.supplyAsync(() -> { //实现了Supplier的get()方法
@@ -132,8 +132,8 @@ public void thenApply() throws Exception {
 从代码逻辑可以看出，thenApply_test等到了pool-1-thread-1线程完成任务后，才进行的调用，并且拿到了supplye()方法返回的结果，而main则异步执行了，这就避免了Future获取结果时需要阻塞或轮询的弊端。
 
 **exceptionally**
-当任务在执行过程中报错了咋办？exceptionally()方法很好的解决了这个问题，当报错时会去调用exceptionally()方法，它的入参为：Function<Throwable, ? extends T> fn，fn为执行任务报错时的回调方法，下面看看代码示例：
-```
+当任务在执行过程中报错了咋办？exceptionally()方法很好的解决了这个问题，当报错时会去调用exceptionally()方法，它的入参为：Function\<Throwable, ? extends T\> fn，fn为执行任务报错时的回调方法，下面看看代码示例：
+```Java
 public void exceptionally() {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         CompletableFuture cf = CompletableFuture.supplyAsync(() -> {
@@ -172,7 +172,7 @@ thenAcceptAsync: helloworld java.lang.RuntimeException: 测试exceptionally...
 
 CompletableFuture类实现了Future接口和CompletionStage接口，Future大家都经常遇到，但是这个CompletionStage接口就有点陌生了，这里的CompletionStage实际上是一个任务执行的一个“阶段”，CompletionStage详细的内容在下文有介绍。
 
-```
+```Java
 public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 	volatile Object result;       // CompletableFuture的结果值或者是一个异常的报装对象AltResult
     volatile Completion stack;    // 依赖操作栈的栈顶
@@ -207,13 +207,13 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 runAsync()做的事情就是异步的执行任务，返回的是CompletableFuture对象，不过CompletableFuture对象不包含结果。runAsync()方法有两个重载方法，这两个重载方法的区别是Executor可以指定为自己想要使用的线程池，而runAsync(Runnable)则使用的是ForkJoinPool.commonPool()。
 
 下面先来看看runAsync(Runnable)的源码：
-```
+```Java
 	public static CompletableFuture<Void> runAsync(Runnable runnable) {
         return asyncRunStage(asyncPool, runnable);
     }
 ```
 这里的asyncPool是一个静态的成员变量：
-```
+```Java
 private static final boolean useCommonPool =
         (ForkJoinPool.getCommonPoolParallelism() > 1); // 并行级别
 private static final Executor asyncPool = useCommonPool ?  
@@ -221,7 +221,7 @@ private static final Executor asyncPool = useCommonPool ?
 ```
 
 回到asyncRunStage()源码：
-```
+```Java
 	static CompletableFuture<Void> asyncRunStage(Executor e, Runnable f) {
         if (f == null) throw new NullPointerException();
         CompletableFuture<Void> d = new CompletableFuture<Void>();
@@ -230,7 +230,7 @@ private static final Executor asyncPool = useCommonPool ?
     }
 ```
 看到asyncRunStage()源码，可以知道任务是由Executor来执行的，那么可想而知Async类一定是实现了Callable接口或者继承了Runnable类，查看Async类：
-```
+```Java
 static final class AsyncRun extends ForkJoinTask<Void>
             implements Runnable, AsynchronousCompletionTask {
         CompletableFuture<Void> dep; Runnable fn;
@@ -265,7 +265,7 @@ postComplete()的源码还是有点复杂的，先不急着分析。**先看看C
 
 #### Completion
 下面先看看Completion的源码：
-```
+```Java
 abstract static class Completion extends ForkJoinTask<Void>
         implements Runnable, AsynchronousCompletionTask {
         volatile Completion next;      
@@ -291,7 +291,7 @@ volatile Completion stack;
 ```
 由这个属性可以看出，CompletableFuture其实就是一个链表的一个数据结构。
 
-```
+```Java
 abstract static class UniCompletion<T,V> extends Completion {
         Executor executor;                 // executor to use (null if none)
         CompletableFuture<V> dep;          // 代表的依赖的CompletableFuture
@@ -322,7 +322,7 @@ abstract static class UniCompletion<T,V> extends Completion {
 ```
 claim方法要在执行action前调用，若claim方法返回false，则不能调用action，原则上要保证action只执行一次。
 
-```
+```Java
 static final class UniAccept<T> extends UniCompletion<T,Void> {
         Consumer<? super T> fn;
         UniAccept(Executor executor, CompletableFuture<Void> dep,
@@ -342,7 +342,7 @@ static final class UniAccept<T> extends UniCompletion<T,Void> {
         }
     }
 ```
-```
+```Java
 final <S> boolean uniAccept(CompletableFuture<S> a,
                                 Consumer<? super S> f, UniAccept<S> c) {
         Object r; Throwable x;
@@ -370,7 +370,7 @@ final <S> boolean uniAccept(CompletableFuture<S> a,
     }
 ```
 对于Completion的执行，还有几个关键的属性：
-```
+```Java
 static final int SYNC   =  0;//同步
 static final int ASYNC  =  1;//异步
 static final int NESTED = -1;//嵌套
@@ -391,14 +391,14 @@ Completion在CompletableFuture中是如何工作的呢？现在先不着急了�
 - Runable既不产生结果也不消耗结果
 
 下面看看一个Stage的调用例子：
-```
+```Java
 stage.thenApply(x -> square(x)).thenAccept(x -> System.out.println(x)).thenRun(() -> System.out.println())
 ```
 这里x -> square(x)就是一个Function类型的Stage，它返回了x。x -> System.out.println(x)就是一个Comsumer类型的Stage，用于接收上一个Stage的结果x。() ->System.out.println()就是一个Runnable类型的Stage，既不消耗结果也不产生结果。
 
 一个、两个或者任意一个CompletionStage的完成都会触发依赖的CompletionStage的执行，CompletionStage的依赖动作可以由带有then的前缀方法来实现。如果一个Stage被两个Stage的完成给触发，则这个Stage可以通过相应的Combine方法来结合它们的结果，相应的Combine方法包括：thenCombine、thenCombineAsync。但如果一个Stage是被两个Stage中的其中一个触发，则无法去combine它们的结果，因为这个Stage无法确保这个结果是那个与之依赖的Stage返回的结果。
 
-```
+```Java
 	@Test
     public void testCombine() throws Exception {
         String result = CompletableFuture.supplyAsync(() -> {
@@ -422,7 +422,7 @@ stage.thenApply(x -> square(x)).thenAccept(x -> System.out.println(x)).thenRun((
 下面开始介绍CompletableFuture的几个核心方法：
 
 **postComplete**
-```
+```Java
 final void postComplete() {
         CompletableFuture<?> f = this; Completion h;    //this表示当前的CompletableFuture
         while ((h = f.stack) != null ||                                  //判断stack栈是否为空
@@ -444,7 +444,7 @@ final void postComplete() {
 postComplete()方法可以理解为当任务完成之后，调用的一个“后完成”方法，主要用于触发其他依赖任务。
 
 **uniAccept**
-```
+```Java
 final <S> boolean uniAccept(CompletableFuture<S> a,
                                 Consumer<? super S> f, UniAccept<S> c) {
         Object r; Throwable x;
@@ -476,7 +476,7 @@ final <S> boolean uniAccept(CompletableFuture<S> a,
 
 **pushStack**
 
-```
+```Java
 	final void pushStack(Completion c) {
         do {} while (!tryPushStack(c));      //使用CAS自旋方式压入栈，避免了加锁竞争
     }
@@ -493,7 +493,7 @@ final <S> boolean uniAccept(CompletableFuture<S> a,
 ```
 
 光分析源码也没法深入理解其代码原理，下面结合一段示例代码来对代码原理进行分析。
-```
+```Java
 	@Test
     public void thenApply() throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -533,19 +533,19 @@ final <S> boolean uniAccept(CompletableFuture<S> a,
          CompletedFuture...isDown
          */
 
-这段示例代码所做的事情就是supplyAsync(Supplier<U> supplier)休眠200秒之后，返回一个字符串，thenAccept(Consumer<? super T> action)等到任务完成之后接收这个字符串，并且调用thenApply_test()方法，随后输出 hello world。
+这段示例代码所做的事情就是supplyAsync(Supplier\<U\> supplier)休眠200秒之后，返回一个字符串，thenAccept(Consumer\<? super T\> action)等到任务完成之后接收这个字符串，并且调用thenApply_test()方法，随后输出 hello world。
 代码中让线程休眠200秒是为了方便观察CompletableFuture的传递过程。
 
 下面就描述下程序的整个运作流程。
 **①** 主线程调用CompletableFuture的supplyAsync()方法，传入Supplier和Executor。在supplyAsync()中又继续调用CompletableFuture的asyncSupplyStage(Executor, Supplier)方法。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20191128102326944.png)
-来到asyncSupplyStage()方法中，调用指定的线程池，并执行execute(new AsyncSupply<U>(d,f))，这里d就是我们的“源任务”，接下来thenApply()要依赖着这个源任务进行后续逻辑操作，f就是Supplier的函数式编程。
+来到asyncSupplyStage()方法中，调用指定的线程池，并执行execute(new AsyncSupply\<U\>(d,f))，这里d就是我们的“源任务”，接下来thenApply()要依赖着这个源任务进行后续逻辑操作，f就是Supplier的函数式编程。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20191128102631844.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
 AsyncSupply实现了Runnable的run()方法，核心逻辑就在run()方法里。在run()方法里，先判断d.result == null，判断该任务是否已经完成，防止并发情况下其他线程完成此任务了。f.get()就是调用的Supplier的函数式编程，这里会休眠200秒，所以executor线程池开启的线程会在这里阻塞200秒。
 
 **②** 虽然executor线程池线程阻塞了，但是main线程任然会继续执行接下来的代码。 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20191128103312134.png)
-main线程会在asyncSupplyStage()方法中返回d，就是我们的“依赖任务”，而这个任务此时还处在阻塞中。接下来main线程会继续执行CompletableFuture的thenAccept(Comsumer<? super T> action)方法，然后调用CompletableFuture的uniAcceptStage()方法。
+main线程会在asyncSupplyStage()方法中返回d，就是我们的“依赖任务”，而这个任务此时还处在阻塞中。接下来main线程会继续执行CompletableFuture的thenAccept(Comsumer\<? super T\> action)方法，然后调用CompletableFuture的uniAcceptStage()方法。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2019112810354686.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
 在uniAcceptStage()方法中，会将“依赖任务”、“源任务”、线程池以及Comsumer报装程一个UniAccept对象，然后调用push()压入stack的栈顶中。随后调用UniAccept的tryFire()方法。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20191128103848372.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
@@ -555,7 +555,7 @@ main线程会在asyncSupplyStage()方法中返回d，就是我们的“依赖任
 
 **③**  回到“源任务”，虽然main线程已经结束了整个生命周期，但是executor线程池的线程任然阻塞着的，休眠了200秒之后，继续执行任务。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20191128105600904.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70)
-然后来到了postComplete()方法。这个方法在前面已经介绍到了，它是CompletableFuture的核心方法之一，做了许多事情。最重要的一件事情就是触发其他依赖任务，接下来调用的方法依次为：UniAccept.tryFire(mode)  ——> CompletableFuture.uniAccept(..) ——> Comsumer.accept(s) ——> 输出“hello world”，并输出当前调用线程的线程名。因这个调用链已经在②中介绍过了，所以就不再详细介绍其运作逻辑。
+然后来到了postComplete()方法。这个方法在前面已经介绍到了，它是CompletableFuture的核心方法之一，做了许多事情。最重要的一件事情就是触发其他依赖任务，接下来调用的方法依次为：UniAccept.tryFire(mode)  ——\> CompletableFuture.uniAccept(..) ——\> Comsumer.accept(s) ——\> 输出“hello world”，并输出当前调用线程的线程名。因这个调用链已经在②中介绍过了，所以就不再详细介绍其运作逻辑。
 
 **小结：** 通过这个小示例，终于理解到了“源任务”和“依赖任务”之间的调用关系，以及CompletableFuture的基本运作原理。然而CompletableFuture还有其他的方法需要去深入分析，由于篇幅所限就不再赘述，感兴趣的读者可以以debug的模式去一点一点分析CompletableFuture其他方法的底层原理。这里不得不说Java并发包作者Doug Lea大神真的太厉害了，阅读他的源码之后，可以发现他写的代码不能以技术来形容，而应该使用“艺术”来形容。
 

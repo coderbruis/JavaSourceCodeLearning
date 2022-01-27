@@ -56,7 +56,7 @@ Lock引起的将当前处理器缓存该变量的数据写回到系统内存中�
 为了实现volatile的内存语义，编译期在生成字节码时会对使用volatile关键字修饰的变量进行处理，在字节码文件里对应位置生成一个Lock前缀指令，Lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成。
 
 下面代码来演示一下禁止指令重排序：
-```
+```Java
 a = 1;            //语句一
 b = 2;            //语句二
 flag = true;      //语句三，flag为volatile变量
@@ -137,7 +137,7 @@ LoadLoad,StoreStore,LoadStore,StoreLoad实际上是Java对上面两种屏障的�
 
 下面来谈谈volatile的应用场景：
 1. 状态标志：多个线程以一个volatile变量作为为状态标志，例如完成**初始化**或者**状态同步**。典型例子AQS的同步状态：
-```
+```Java
 /**
 * The synchronization state.
 */
@@ -146,7 +146,7 @@ private volatile int state;
 2. 一次性安全发布
 
 最典型的例子就是安全的单例模式：
-```
+```Java
 private static Singleton instance;
 public static Singleton getInstance() {
     //第一次null检查
@@ -164,7 +164,7 @@ public static Singleton getInstance() {
 上面这种写法，仍然会出现问题——多线程调用getInstance方法时，有可能一个线程会获得还**没有初始化的对象**!这都是因为重排序的原因，具体分析这里不展开。
 
 解决办法及时用volatile对instance进行修饰
-```
+```Java
 private static volatile Singleton instance;
 ```
 这就是经典的“双重检查锁定与延迟初始化”。

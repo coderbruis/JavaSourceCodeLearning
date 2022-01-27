@@ -65,7 +65,7 @@
 
 接下来的原理分析通过Dubbo源码中的test包下的代码来进行说明。（想学好开源框架，要好好利用开源框架中各种Test用例）
 
-```
+```Java
     @Test
     public void test_getDefaultExtension() throws Exception {
         SimpleExt ext = getExtensionLoader(SimpleExt.class).getDefaultExtension();

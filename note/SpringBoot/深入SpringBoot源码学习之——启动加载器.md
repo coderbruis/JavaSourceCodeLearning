@@ -8,7 +8,7 @@
 SpringBoot的CommandLineRunner是一个启动加载器的核心，CommandLinerRunner是一个接口，该接口定义如下：
 
 
-```
+```Java
 @FunctionalInterface
 public interface CommandLineRunner {
 
@@ -22,7 +22,7 @@ public interface CommandLineRunner {
 
 实例代码：
 
-```
+```Java
 @Component
 @Order(1)
 public class FirstCommandLineRunner implements CommandLineRunner {
@@ -47,7 +47,7 @@ public class FirstCommandLineRunner implements CommandLineRunner {
 ### 2. ApplicationRunner
 实现SpringBoot启动加载器的第二种方式，就是通过实现ApplicationRunner，先看下ApplicationRunner的源码：
 
-```
+```Java
 @FunctionalInterface
 public interface ApplicationRunner {
 	void run(ApplicationArguments args) throws Exception;
@@ -57,7 +57,7 @@ public interface ApplicationRunner {
 
 先看下ApplicationArguments这个接口定义：
 
-```
+```Java
 public interface ApplicationArguments {
 	// 获取源参数，即SpringBootApplication#run方法中传入的args; 这里的source就是SpringBoot对象
 	String[] getSourceArgs();
@@ -76,7 +76,7 @@ public interface ApplicationArguments {
 
 实例代码：
 
-```
+```Java
 @Order(1)
 @Component
 public class FirstApplicationRunner implements ApplicationRunner {
@@ -98,7 +98,7 @@ public class FirstApplicationRunner implements ApplicationRunner {
 
 
 ### 3. SpringBoot启动加载器原理
-其实SpringBoot启动加载器原理比较简单，在底层源码调用逻辑比较清除。
+其实SpringBoot启动加载器原理比较简单，在底层源码调用逻辑比较清楚。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200820100314418.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70#pic_center)
 在DefaultApplicationArguments里，有一个不可忽略的类：Source
 

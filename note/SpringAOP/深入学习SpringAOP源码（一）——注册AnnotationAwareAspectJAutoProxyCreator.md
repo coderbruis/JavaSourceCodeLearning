@@ -13,7 +13,7 @@
 - TestMain            //main测试方法入口
 
 TestBean.java
-```
+```Java
 public class TestBean {
     private String testStr = "testStr";
 
@@ -32,7 +32,7 @@ public class TestBean {
 ```
 
 AspectJTest.java
-```
+```Java
 @Aspect
 public class AspectJTest {
 
@@ -96,7 +96,7 @@ aspectTest.xml
 </beans>
 ```
 TestMain.java
-```
+```Java
 public class TestMain {
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("aspectTest.xml");
@@ -157,7 +157,7 @@ http\://www.springframework.org/schema/aop=org.springframework.aop.config.AopNam
 
 无图无真相啊，原来Spring将配置文件中的xmlns配置都解析成了一个一个Java命名解析器。回到我们的关注重点——AopNamespaceHandler，查看源码：
 AopNamespaceHandler.class
-```
+```Java
 public class AopNamespaceHandler extends NamespaceHandlerSupport {
     public AopNamespaceHandler() {
     }
@@ -171,7 +171,7 @@ public class AopNamespaceHandler extends NamespaceHandlerSupport {
 }
 ```
 可以看到，在init()方法里，Spring对aspectj-autoproxy也就是AnnotationAwareAspectJAutoProxyCreator进行了注册。在详细了解注册原理之前，先说明下在Spring中，所有的解析器都是对BeanDefinitionParser接口的同一实现：
-```
+```Java
 public interface BeanDefinitionParser {
     @Nullable
     BeanDefinition parse(Element var1, ParserContext var2);
@@ -180,7 +180,7 @@ public interface BeanDefinitionParser {
 解析入口都是从parse方法开始的。
 进入AspectJAutoProxyBeanDefinitionParser类中查看parse的实现逻辑：
 
-```
+```Java
 class AspectJAutoProxyBeanDefinitionParser implements BeanDefinitionParser {
     ...
     @Nullable
@@ -196,7 +196,7 @@ class AspectJAutoProxyBeanDefinitionParser implements BeanDefinitionParser {
 
 
 AopNamspaceUtils
-```
+```Java
 public abstract class AopNamespaceUtils {
     public static final String PROXY_TARGET_CLASS_ATTRIBUTE = "proxy-target-class";
     private static final String EXPOSE_PROXY_ATTRIBUTE = "expose-proxy";
@@ -231,7 +231,7 @@ public abstract class AopNamespaceUtils {
     
 ```
 
-```
+```Java
 public abstract class AopConfigUtils {
     @Nullable
     private static BeanDefinition registerOrEscalateApcAsRequired(Class<?> cls, BeanDefinitionRegistry registry, @Nullable Object source) {
@@ -264,7 +264,7 @@ registerOrEscalateApcAsRequired方法的作用就是获取AnnotationAwareAspectJ
 
 
 看看如果proxy-target-class和expose-proxy都为true时，代码的逻辑。
-```
+```Java
 public abstract class AopConfigUtils {
     ...
     /*
@@ -307,7 +307,7 @@ public abstract class AopConfigUtils {
 经过了useClassProxyingIfNecessary()方法的调用，ParserContext对象中存放好了注册的额外信息（proxy-target-class、expose-proxy值等），这里暂且将ParserContext称为解析上下文。由上面的源码可知，在AopNamespaceUtils类的registerAspectJAnnotationAutoProxyCreatorIfNecessary方法中，将获取的org.springframework.aop.config.internalAutoProxyCreator的BeanDefinition和解析上下文一起传入registerComponentIfNecessary方法中，进行Component组件注册。
 
 在随后的registerComponentIfNecessary方法中，经过new BeanComponentDefinition()构造方法的调用，已经将AnnotationAwareAspectJAutoProxyCreator的BeanDefinition注册到了SpringIOC中。
-```
+```Java
 public abstract class AopConfigUtils {
     ...
     private static void registerComponentIfNecessary(@Nullable BeanDefinition beanDefinition, ParserContext parserContext) {
@@ -318,14 +318,14 @@ public abstract class AopConfigUtils {
     }
 }
 ```
-```
+```Java
 public class BeanComponentDefinition extends BeanDefinitionHolder implements ComponentDefinition {
     public BeanComponentDefinition(BeanDefinition beanDefinition, String beanName) {
         this(new BeanDefinitionHolder(beanDefinition, beanName));
     }
 }
 ```
-```
+```Java
 public class BeanDefinitionHolder implements BeanMetadataElement {
     public BeanDefinitionHolder(BeanDefinition beanDefinition, String beanName) {
         this(beanDefinition, beanName, (String[])null);
@@ -341,7 +341,7 @@ public class BeanDefinitionHolder implements BeanMetadataElement {
 }
 ```
 然后一路返回，将BeanDefinition存放在解析上下文（ParserContext）中，并在AspectJAutoProxyBeanDefinitionParser类的extendBeanDefinition方法中取出。
-```
+```Java
 class AspectJAutoProxyBeanDefinitionParser implements BeanDefinitionParser {
     private void extendBeanDefinition(Element element, ParserContext parserContext) {
         BeanDefinition beanDef = parserContext.getRegistry().getBeanDefinition("org.springframework.aop.config.internalAutoProxyCreator");

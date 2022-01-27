@@ -28,13 +28,13 @@ Java SPI的定义及使用步骤如下：
 在com.test.spi包目录下，定义了一个PrintService接口和一个PrintServiceImpl实现类，然后在resources目录下定义了一个META-INF/services/com.test.spi.PrintService，注意这里定义的是一个
 全路径名称的文件。
 
-```
+```Java
 public interface Printservice (
     void printlnfo();
 }
 ```
 
-```
+```Java
 public class PrintServicelmpl implements Printservice { 
     @Override
     public void printlnfo() {
@@ -43,7 +43,7 @@ public class PrintServicelmpl implements Printservice {
 }
 ```
 
-```
+```Java
 public static void main(String[] args) ( 
     ServiceLoader<PrintService> serviceServiceLoader =
     ServiceLoader.load(PrintService.class);
@@ -119,7 +119,7 @@ ExtensionLoader即扩展点加载器，它是Dubbo SPI的核心，负责加载�
 
 上图清楚的展示了LoadingStrategy接口及其实现类的关系。LoadingStrategy继承了Prioritized，因而其实现类会有优先级之分，而Dubbo默认是使用的DubboInternalLoadingStrategy，查看其三个类的源码：
 
-```
+```Java
 public class DubboInternalLoadingStrategy implements LoadingStrategy {
 
     // 表示要加载的目录位置
@@ -136,7 +136,7 @@ public class DubboInternalLoadingStrategy implements LoadingStrategy {
 }
 ```
 
-```
+```Java
 public class DubboLoadingStrategy implements LoadingStrategy {
 
     // 表示要加载的目录位置
@@ -160,7 +160,7 @@ public class DubboLoadingStrategy implements LoadingStrategy {
 }
 ```
 
-```
+```Java
 public class ServicesLoadingStrategy implements LoadingStrategy {
 
     // 表示要加载的目录位置
@@ -185,7 +185,7 @@ public class ServicesLoadingStrategy implements LoadingStrategy {
 
 这里的MAX_PRIORITY、NORMAL_PRIORITY和MIN_PRIORITY时定义在Prioritized这个接口中的，查看一下Prioritized中定义的值以及实现的compareTo方法：
 
-```
+```Java
     /**
      * The maximum priority
      */

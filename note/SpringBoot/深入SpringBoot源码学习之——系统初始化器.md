@@ -33,13 +33,13 @@
  */
 
   ```
-  
+
   注释意思可以总结为以下几点：
   1. ApplicationContextInitializer是一个用于在ConfigurableApplicationContext#refresh方法刷新之前，进行回调初始化ConfigurableApplicationContext的一个回调接口。
   2. ApplicationContextInitializer通常用于对WEB环境上下文进行编程式地初始化，例如通过ConfigurableApplicationContext#getEnvironment方法获取容器环境来注册属性源以及激活容器配置。
   3. ApplicationContextInitializer支持@Order注解，在调用初始化器之前系统会对其进行排序。
 
-```
+```Java
 public interface ApplicationContextInitializer<C extends ConfigurableApplicationContext> {
 
 	/**
@@ -76,7 +76,7 @@ SpringBoot框架已经将spring.factories对应所有的初始化器加载到了
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200608120932643.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NvZGVyQnJ1aXM=,size_16,color_FFFFFF,t_70#pic_center)
 applyInitializers方法的注释已经注明了方法的作用，即：在SpringIOC容器进行refresh刷新之前，将所有的初始化器应用于SpringIOC容器。传入的context此时还没有进行刷新。
 
-```
+```Java
 	protected void applyInitializers(ConfigurableApplicationContext context) {
 		// getInitializers()方法会从SpringApplication中获取所有的已实例化的初始化器
 		for (ApplicationContextInitializer initializer : getInitializers()) {
@@ -96,7 +96,7 @@ applyInitializers方法的注释已经注明了方法的作用，即：在Spring
 ### 2. 自定义ApplicationContextInitializer
 自定义一个系统初始化器首先当然得实现ApplicationContextInitializer接口，然后将逻辑写在initialize方法里。
 
-```
+```Java
 @Order(1)
 public class FirstInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 	// 下面将在initialize方法中获取ConfigurableEnviroment对象，并自定义一个map存入其中。
@@ -120,7 +120,7 @@ org.springframework.context.ApplicationContextInitializer=com.bruis.learnsb.init
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200608144657719.png#pic_center)
 这样，SpringBoot就能识别到FirstInitializer这个自定义初始化器了。下面定义一个service并实现ApplicationContextAware，用于注入ApplicationContext对象。
-```
+```Java
 @Component
 public class TestService implements ApplicationContextAware {
 
@@ -144,7 +144,7 @@ public class TestService implements ApplicationContextAware {
 ```
 
 然后写一个Test类，测试一下：
-```
+```Java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SpringBeanTest {
@@ -168,7 +168,7 @@ context.initializer.classes=com.bruis.learnsb.initializer.FirstInitializer
 ```
 
 2. SpringApplication#addInitializers
-```
+```Java
 @SpringBootApplication
 public class LearnsbApplication {
 
