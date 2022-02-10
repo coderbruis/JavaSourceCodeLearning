@@ -1,7 +1,7 @@
 ## 前言
 前一章已经讲解了SpringBoot的SpringFactoriesLoader类的功能以及作用，即读取spring.factories文件中的工厂类，其中就包括了系统初始化器。在SpringBoot中，系统初始化器名称为ApplicationContextInitializer，它是一个接口，只定义了一个initialize方法。下面将详细介绍下SpringBoot的系统初始化器的原理以及作用，并且自定义一个系统初始化器，并在此基础上讲解下常见的使用场景。
 
-**SpringBoot版本：5.2.1.RELEASE**
+**SpringBoot 版本：2.2.1.RELEASE**
 
 ## 正文
 
