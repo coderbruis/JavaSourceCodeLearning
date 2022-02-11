@@ -1,12 +1,8 @@
-package com.learnjava.thread.reentranlock;
+package com.bruis.learnnetty.thread.synchronize;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 模拟客户端请求类，用于构建请求对象
@@ -16,8 +12,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class RequestFuture {
     public static Map<Long, RequestFuture> futures = new ConcurrentHashMap<>();
-    private final Lock lock = new ReentrantLock();
-    private final Condition condition = lock.newCondition();
     private long id;
     /**
      * 请求参数
@@ -45,18 +39,15 @@ public class RequestFuture {
      * @return
      */
     public Object get() {
-        lock.lock();
-        try {
+        synchronized (this) {
             while (this.result == null) {
                 try {
                     // 主线程默认等待5s，然后查看下结果
-                    condition.await(timeout, TimeUnit.MILLISECONDS);
+                    this.wait(timeout);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        } finally {
-            lock.unlock();
         }
         return this.result;
     }
@@ -73,11 +64,8 @@ public class RequestFuture {
         /**
          * 通知主线程
          */
-        Objects.requireNonNull(future, "RequestFuture").getLock().lock();
-        try {
-            future.getCondition().signalAll();
-        } finally {
-            Objects.requireNonNull(future, "RequestFuture").getLock().unlock();
+        synchronized (Objects.requireNonNull(future, "RequestFuture")) {
+            future.notify();
         }
     }
 
@@ -111,13 +99,5 @@ public class RequestFuture {
 
     public void setTimeout(long timeout) {
         this.timeout = timeout;
-    }
-
-    public Lock getLock() {
-        return lock;
-    }
-
-    public Condition getCondition() {
-        return condition;
     }
 }

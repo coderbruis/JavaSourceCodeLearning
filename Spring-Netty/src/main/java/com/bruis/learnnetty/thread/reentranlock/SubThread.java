@@ -1,4 +1,4 @@
-package com.learnjava.thread.synchronize;
+package com.bruis.learnnetty.thread.reentranlock;
 
 /**
  * 子线程，用于模拟服务端处理
@@ -25,7 +25,6 @@ public class SubThread extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(this + " -> 当前线程准备调用received: " + Thread.currentThread().getName());
         RequestFuture.received(response);
     }
 }

@@ -1,8 +1,12 @@
-package com.learnjava.thread.synchronize;
+package com.bruis.learnnetty.thread.reentranlock;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 模拟客户端请求类，用于构建请求对象
@@ -12,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RequestFuture {
     public static Map<Long, RequestFuture> futures = new ConcurrentHashMap<>();
+    private final Lock lock = new ReentrantLock();
+    private final Condition condition = lock.newCondition();
     private long id;
     /**
      * 请求参数
@@ -39,15 +45,18 @@ public class RequestFuture {
      * @return
      */
     public Object get() {
-        synchronized (this) {
+        lock.lock();
+        try {
             while (this.result == null) {
                 try {
                     // 主线程默认等待5s，然后查看下结果
-                    this.wait(timeout);
+                    condition.await(timeout, TimeUnit.MILLISECONDS);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+        } finally {
+            lock.unlock();
         }
         return this.result;
     }
@@ -64,8 +73,11 @@ public class RequestFuture {
         /**
          * 通知主线程
          */
-        synchronized (Objects.requireNonNull(future, "RequestFuture")) {
-            future.notify();
+        Objects.requireNonNull(future, "RequestFuture").getLock().lock();
+        try {
+            future.getCondition().signalAll();
+        } finally {
+            Objects.requireNonNull(future, "RequestFuture").getLock().unlock();
         }
     }
 
@@ -99,5 +111,13 @@ public class RequestFuture {
 
     public void setTimeout(long timeout) {
         this.timeout = timeout;
+    }
+
+    public Lock getLock() {
+        return lock;
+    }
+
+    public Condition getCondition() {
+        return condition;
     }
 }

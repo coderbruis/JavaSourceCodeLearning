@@ -1,4 +1,4 @@
-package com.learnjava.thread.reentranlock;
+package com.bruis.learnnetty.thread.reentranlock;
 
 /**
  * 响应结果类

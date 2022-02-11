@@ -1,4 +1,4 @@
-package com.learnjava.thread.synchronize;
+package com.bruis.learnnetty.thread.reentranlock;
 
 import java.util.ArrayList;
 import java.util.List;

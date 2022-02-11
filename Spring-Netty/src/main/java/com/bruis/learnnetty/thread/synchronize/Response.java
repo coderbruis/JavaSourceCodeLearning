@@ -1,4 +1,4 @@
-package com.learnjava.thread.synchronize;
+package com.bruis.learnnetty.thread.synchronize;
 
 /**
  * 响应结果类
