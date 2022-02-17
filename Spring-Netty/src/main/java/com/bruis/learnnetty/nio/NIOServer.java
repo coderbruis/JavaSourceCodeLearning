@@ -1,4 +1,4 @@
-package com.bruis.learnnetty.nio.demo01;
+package com.bruis.learnnetty.nio;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
