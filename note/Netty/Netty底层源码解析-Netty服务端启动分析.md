@@ -1,15 +1,24 @@
 # Netty 服务端启动分析
 
-在Java中，网络通信是通过Socket来进行的，那么在Netty中，服务端的Socket是在哪里进行初始化的？并且在哪里进行accept连接？ Netty里的Channel是啥，有啥作用呢？带着这三个问题，进入本文的Netty服务端启动分析。
+在Java中，网络通信是通过Socket来进行的，那么在Netty中，服务端要用到的Socket是在哪里进行初始化的？并且在哪里进行accept接受客户端连接的？ Netty里的Channel是啥，有啥作用呢？带着这三个问题，进入本文的Netty服务端启动分析。
 
-本文分析将分为四大步：
+本文分析将分为五大步：
 
-1. 创建服务端Channel；
-2. 初始化服务端Channel；
-3. 注册selector；
-4. 端口绑定；
+1. Netty中的Channel；
+2. 创建服务端Channel；
+3. 初始化服务端Channel；
+4. 注册selector；
+5. 端口绑定；
 
-## 1. 创建服务端Channel
+## 1. Netty中的Channel
+
+在Netty中的Channel是用来定义对网络IO进行读/写的相关接口，与NIO中的Channel接口类似。Channel的功能主要有网络IO的读写、客户端发起的连接、主动关闭连接、关闭链路、获取通信双方的网络地址等。Channel接口下有一个重要的抽象类————AbstractChannel，一些公共的基础方法都在这个抽象类中实现，但对于一些特定的功能则需要不同的实现类去实现，这样最大限度地实现了功能和接口的重用。
+
+在AbstractChannel中的网络IO模型和协议种类比较多，除了TCP协议，Netty还支持了HTTP2协议，如：AbstractHttp2StreamChannel。
+
+Netty对于不同的网络模型以及IO模型，在AbstractChannel的基础上又抽象出了一层，如：AbstractNioChannel、AbstractEpollChannel、AbstractHttp2StreamChannel。
+
+## 2. 创建服务端Channel
 
 创建服务端Channel又可以分为四步，如下：
 
@@ -54,13 +63,101 @@ public final class Server {
 }
 ```
 
-服务端构建好ServerBootstrap之后，通过bind()方法进行绑定。进入ServerBootstrap的父类AbstractBootstrap后，一路调用来到AbstractBootstrap#doBind()方法，首先就是初始化并注册Channel。
+服务端构建好ServerBootstrap之后，通过bind()方法进行绑定。进入ServerBootstrap的父类AbstractBootstrap后，线程经过调用栈的调用后来到AbstractBootstrap#doBind()方法，首先就是初始化并注册Channel。
 
-![netty01png](https://coderbruis.github.io/javaDocs/img/netty/source/netty01_01.png)
+AbstractBootstrap#doBind()
+```java
+    private ChannelFuture doBind(final SocketAddress localAddress) {
+        // 注册channel
+        final ChannelFuture regFuture = initAndRegister();
+        final Channel channel = regFuture.channel();
+        if (regFuture.cause() != null) {
+            return regFuture;
+        }
 
-在initAndRegister处channelFactory是ReflectiveChannelFactory，具体赋值处是在ServerBootstrap#channel()方法中定义的，并且传入的channel是：NioServerSocketChannel，上图中可以见。
+        // regFuture如果完成了，则isDone为true，否则给regFuture添加一个监听器，当完成的时候再进行doBind0的操作
+        if (regFuture.isDone()) {
+            // 此时我们已经知道NioServerSocketChannel已经完成了注册
+            ChannelPromise promise = channel.newPromise();
+            doBind0(regFuture, channel, localAddress, promise);
+            return promise;
+        } else {
+            // Registration future is almost always fulfilled already, but just in case it's not.
+            final PendingRegistrationPromise promise = new PendingRegistrationPromise(channel);
 
-查看到ReflectiveChannelFactory#newChannel()方法，实际就是调用的NioServerSocketChannel#newInstance()方法反射构建一个channel对象。
+            // 给regFuture添加一个监听器，当注册chanel完成的时候，会回调进来
+            regFuture.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    Throwable cause = future.cause();
+                    if (cause != null) {
+                        // Registration on the EventLoop failed so fail the ChannelPromise directly to not cause an
+                        // IllegalStateException once we try to access the EventLoop of the Channel.
+                        promise.setFailure(cause);
+                    } else {
+                        // Registration was successful, so set the correct executor to use.
+                        // See https://github.com/netty/netty/issues/2586
+                        promise.registered();
+
+                        doBind0(regFuture, channel, localAddress, promise);
+                    }
+                }
+            });
+            return promise;
+        }
+    }
+
+    final ChannelFuture initAndRegister() {
+        Channel channel = null;
+        try {
+            // 拿到ReflectiveChannelFactory，然后通过其newChannel生成一个服务端Channel，底层就是通过反射newInstance()获取实例
+            // 这里自然是NioServerSocketChannel实例对象
+            channel = channelFactory.newChannel();
+            // 初始化channel
+            init(channel);
+        } catch (Throwable t) {
+            if (channel != null) {
+                // channel can be null if newChannel crashed (eg SocketException("too many open files"))
+                channel.unsafe().closeForcibly();
+                // as the Channel is not registered yet we need to force the usage of the GlobalEventExecutor
+                return new DefaultChannelPromise(channel, GlobalEventExecutor.INSTANCE).setFailure(t);
+            }
+            // as the Channel is not registered yet we need to force the usage of the GlobalEventExecutor
+            return new DefaultChannelPromise(new FailedChannel(), GlobalEventExecutor.INSTANCE).setFailure(t);
+        }
+
+        /**
+         * config() -> ServerBootstrapConfig
+         * group() -> NioEventLoopGroup，返回的是MultithreadEventLoopGroup
+         * register() -> 就是通过chooser选取到NioEventLoop对象
+         */
+        ChannelFuture regFuture = config().group().register(channel);
+        if (regFuture.cause() != null) {
+            if (channel.isRegistered()) {
+                channel.close();
+            } else {
+                channel.unsafe().closeForcibly();
+            }
+        }
+        return regFuture;
+    }    
+```
+
+在initAndRegister处channelFactory是ReflectiveChannelFactory，具体赋值处是在ServerBootstrap#channel()方法中定义的，并且传入的channel是：NioServerSocketChannel。
+
+ReflectiveChannelFactory#newChannel
+```java
+    @Override
+    public T newChannel() {
+        try {
+            return constructor.newInstance();
+        } catch (Throwable t) {
+            throw new ChannelException("Unable to create Channel from class " + constructor.getDeclaringClass(), t);
+        }
+    }
+```
+
+查看到ReflectiveChannelFactory#newChannel()方法，T的类型是NioServerSocketChannel，所以实际就是调用的NioServerSocketChannel#newInstance()方法反射构建一个channel对象。
 
 
 那么，我们看下NioServerSocketChannel底层是如何获取通过反射创建服务端Channel的呢？
@@ -136,15 +233,14 @@ AbstractChannel类
     }
 ```
 
-总结下服务端创建Channel的三件重要事情：
+通过源码阅读，可以总结出Netty服务端创建Channel的三件重要事情：
 
 1. 通过反射来创建JDK底层的channel；
 2. 设置Channel为非阻塞模式ch.configureBlocking(false);
 3. 创建一个pipeline对象；
 
 
-
-## 2. 初始化服务端Channel
+## 3. 初始化服务端Channel
 
 初始化服务端Channel可以分为如下的几步：
 
@@ -208,17 +304,13 @@ ServerBoostrap端初始化过程
     }
 ```
 
-## 3. 注册selector
+## 4. 将Channel注册到selector
 
 整个注册selector过程可以分为以下几步：
 
-- AbstractChannel#register(channel) 入口
-	- this.eventLoop = eventLoop 绑定线程
-	- register0() 实际注册 
-	  	- doRegister() 调用jdk底层进行注册
-	  	- invokeHandlerAddedIfNeeded()
-		- fireChannelRegistered() 传播注册成功的事件
-	
+1. AbstractChannel$AbstractUnsafe#register(channel)
+2. AbstractUnsafe#register0()
+3. AbstractUnsafe#doRegister()
 
 AbstractChannel
 ```java
@@ -322,15 +414,16 @@ AbstractNioChannel.java
 
 就这样，NioServerSocketChannel就以Accept事件注册到了Selector上了。
 
-## 4. 端口绑定
+这里需要注意一点，javaChannel()返回的是AbstractSelectableChannel，调用其register方法用于在给定的selector上注册这个通道channel，并返回一个选这件selectionKey。传入的操作位为0表示对任何事件都不感兴趣，仅仅是完成注册操作。
+
+## 5. 端口绑定
 
 端口绑定流程如下：
 
-- AbstractUnsafe#bind() 入口
-  	- dobind()
-  		- javaChannel().bind() jdk底层绑定
-	- pipeline.fireChanelActive() 传播事件
-		- HeadContext.readIfIsAutoRead()
+1. AbstractBootstrap#bind()
+2. AbstractBootstrap#dobind()
+3. AbstractChannel#bind()
+4. NioServerSocketChannel#doBind()
 	
 
 AbstractChannel.AbstractUnsafe#bind()
@@ -402,3 +495,5 @@ Netty服务端核心启动流程主要是为了创建NioServerSocketChannel，�
 - AbstractChannel.AbstractUnsafe#register() 将服务端Channel注册到Selector上
 - AbstractChannel.AbstractUnsafe#doBind() 注册端口号
   
+
+<Boxx type='tip' content='本站使用「CC BY 4.0」创作共享协议，转载请在文章明显位置注明作者及出处。' />
