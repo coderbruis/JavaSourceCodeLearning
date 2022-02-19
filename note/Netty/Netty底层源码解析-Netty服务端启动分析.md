@@ -496,4 +496,3 @@ Netty服务端核心启动流程主要是为了创建NioServerSocketChannel，�
 - AbstractChannel.AbstractUnsafe#doBind() 注册端口号
   
 
-<Boxx type='tip' content='本站使用「CC BY 4.0」创作共享协议，转载请在文章明显位置注明作者及出处。' />
