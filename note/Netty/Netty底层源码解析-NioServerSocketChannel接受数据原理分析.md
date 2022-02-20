@@ -1,10 +1,10 @@
 ## NioServerSocketChannel读取数据原理分析
 
-NioServerSocketChannel是AbstractNioMessageChannel的子类，而NioSocketChannel是AbstractNioByteChannel的子类，并且他们都有一个公共的父类：AbstractChannel。
+NioServerSocketChannel是AbstractNioMessageChannel的子类，而NioSocketChannel是AbstractNioByteChannel的子类，并且他们都有两个公共的父类：AbstractNioChannel、AbstractChannel。
 
-在Netty中Channel是用来定义对网络IO的读写操作的相关接口，与NIO的Channel接口类似。Channel的功能主要有网络IO的读写、客户端发起的连接、主动关闭连接、关闭链路、获取通信双方的网络地址等。一些公共的基础方法都在这个AbstractChannel抽象类中实现，但对于一些特定的功能则需要不同的实现类去实现，这样最大限度地实现了功能和接口的重用。
-
-另外，AbstractChannel的构造方法中对Unsafe类和ChannelPipeline类进行了初始化。
+在Netty中Channel是用来定义对网络IO的读写操作的相关接口，与NIO的Channel接口类似。Channel的功能主要有网络IO的读写、客户端发起的连接、主动关闭连接、关闭链路、获取通信双方的网络地址等。
+一些公共的基础方法都在这个AbstractChannel抽象类中实现，几个核心的方法如：channel的注册，channel撤销注册，网络IO的读、写。但对于一些特定的功能则需要不同的实现类去实现，这样最大限度地实现了功能和接口的重用，
+就如AbstractNioChannel中主要定义了doRegister()、doConnect()、newDirectBuffer()方法。
 
 ## 1. NioServerSocketChannel源码分析
 
@@ -47,7 +47,7 @@ NioServerSocketChannel.class
     }
 ```
 
-在ServerChannel的开启，selector上的注册等前期工作完成后，NioServerSocketChannel的开始监听新连接的加入，源码如下：
+在ServerSocketChannel的开启，selector上的注册等前期工作完成后，NioServerSocketChannel的开始监听新连接的加入，源码如下：
 
 ```java
     @Override
