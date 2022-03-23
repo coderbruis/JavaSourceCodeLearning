@@ -9,13 +9,16 @@ import static com.bruis.learnnetty.im.model.Command.MESSAGE_REQUEST;
  */
 public class MessageRequestPacket extends Packet {
 
-    public MessageRequestPacket(){}
-
-    public MessageRequestPacket(String message) {
-        this.message = message;
-    }
+    private String toUserId;
 
     private String message;
+
+    public MessageRequestPacket(){}
+
+    public MessageRequestPacket(String toUserId, String message) {
+        this.toUserId = toUserId;
+        this.message = message;
+    }
 
     @Override
     public Byte getCommand() {
@@ -28,5 +31,13 @@ public class MessageRequestPacket extends Packet {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(String toUserId) {
+        this.toUserId = toUserId;
     }
 }

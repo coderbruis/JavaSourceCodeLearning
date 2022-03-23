@@ -3,7 +3,7 @@ package com.bruis.learnnetty.im.server;
 import com.bruis.learnnetty.im.codec.PacketDecoder;
 import com.bruis.learnnetty.im.codec.PacketEncoder;
 import com.bruis.learnnetty.im.codec.Spliter;
-import com.bruis.learnnetty.im.server.handler.FirstServerHandler;
+import com.bruis.learnnetty.im.server.handler.AuthHandler;
 import com.bruis.learnnetty.im.server.handler.LoginRequestHandler;
 import com.bruis.learnnetty.im.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -41,6 +41,7 @@ public class NettyServer {
 //                        ch.pipeline().addLast(new FirstServerHandler());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }

@@ -6,7 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
- * @Description
+ * @Description 拆包、粘包处理
  * @Author luohaiyang
  * @Date 2022/3/23
  */
@@ -20,11 +20,11 @@ public class Spliter extends LengthFieldBasedFrameDecoder {
 
     @Override
     protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+        // 校验协议
         if (in.getInt(in.readerIndex()) != PacketCodeC.MAGIC_NUMBER) {
             ctx.channel().close();
             return null;
         }
-
         return super.decode(ctx, in);
     }
 }

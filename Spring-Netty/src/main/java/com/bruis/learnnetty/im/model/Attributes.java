@@ -1,5 +1,6 @@
 package com.bruis.learnnetty.im.model;
 
+import com.bruis.learnnetty.im.session.Session;
 import io.netty.util.AttributeKey;
 
 /**
@@ -8,5 +9,5 @@ import io.netty.util.AttributeKey;
  * @Date 2022/3/22
  */
 public interface Attributes {
-    AttributeKey<Boolean> LOGIN = AttributeKey.newInstance("login");
+    AttributeKey<Session> SESSION = AttributeKey.newInstance("session");
 }
