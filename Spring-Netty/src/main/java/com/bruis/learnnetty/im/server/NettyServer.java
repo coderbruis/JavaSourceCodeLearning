@@ -3,9 +3,7 @@ package com.bruis.learnnetty.im.server;
 import com.bruis.learnnetty.im.codec.PacketDecoder;
 import com.bruis.learnnetty.im.codec.PacketEncoder;
 import com.bruis.learnnetty.im.codec.Spliter;
-import com.bruis.learnnetty.im.server.handler.AuthHandler;
-import com.bruis.learnnetty.im.server.handler.LoginRequestHandler;
-import com.bruis.learnnetty.im.server.handler.MessageRequestHandler;
+import com.bruis.learnnetty.im.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -38,11 +36,12 @@ public class NettyServer {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new Spliter());
-//                        ch.pipeline().addLast(new FirstServerHandler());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new CreateGroupRequestHandler());
+                        ch.pipeline().addLast(new LogoutRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });

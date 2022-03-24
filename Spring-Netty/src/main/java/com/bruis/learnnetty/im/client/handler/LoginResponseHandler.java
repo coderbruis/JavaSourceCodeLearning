@@ -6,8 +6,6 @@ import com.bruis.learnnetty.im.util.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-import java.util.Date;
-
 /**
  * @Description 登录响应的reponse
  * @Author luohaiyang
@@ -21,10 +19,10 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
         String userName = loginResponsePacket.getUserName();
 
         if (loginResponsePacket.isSuccess()) {
-            System.out.println(new Date() + ": 客户端登录成功");
+            System.out.println("[" + userName + "]登录成功，userId 为: " + loginResponsePacket.getUserId());
             SessionUtil.bindSession(new Session(userId, userName), ctx.channel());
         } else {
-            System.out.println(new Date() + ": 客户端登录失败，原因：" + loginResponsePacket.getReason());
+            System.out.println("[" + userName + "]登录失败，原因：" + loginResponsePacket.getReason());
         }
     }
 

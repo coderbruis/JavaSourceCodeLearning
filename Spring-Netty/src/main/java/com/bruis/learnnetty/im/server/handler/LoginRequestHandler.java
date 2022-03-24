@@ -3,6 +3,7 @@ package com.bruis.learnnetty.im.server.handler;
 import com.bruis.learnnetty.im.model.LoginRequestPacket;
 import com.bruis.learnnetty.im.model.LoginResponsePacket;
 import com.bruis.learnnetty.im.session.Session;
+import com.bruis.learnnetty.im.util.IDUtil;
 import com.bruis.learnnetty.im.util.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -26,7 +27,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
         if (valid(loginRequestPacket)) {
             loginResponsePacket.setSuccess(true);
-            String userId = randomUserId();
+            String userId = IDUtil.randomUserId();
             loginResponsePacket.setUserId(userId);
             System.out.println("[" + loginRequestPacket.getUserName() + "]登录成功");
             SessionUtil.bindSession(new Session(userId, loginRequestPacket.getUserName()), ctx.channel());
@@ -42,10 +43,6 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
     private boolean valid(LoginRequestPacket loginRequestPacket) {
         return true;
-    }
-
-    private static String randomUserId() {
-        return UUID.randomUUID().toString().split("-")[0];
     }
 
     @Override
