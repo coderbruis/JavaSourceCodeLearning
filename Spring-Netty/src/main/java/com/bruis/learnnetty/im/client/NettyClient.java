@@ -1,9 +1,6 @@
 package com.bruis.learnnetty.im.client;
 
-import com.bruis.learnnetty.im.client.handler.CreateGroupResponseHandler;
-import com.bruis.learnnetty.im.client.handler.LoginResponseHandler;
-import com.bruis.learnnetty.im.client.handler.LogoutResponseHandler;
-import com.bruis.learnnetty.im.client.handler.MessageResponseHandler;
+import com.bruis.learnnetty.im.client.handler.*;
 import com.bruis.learnnetty.im.codec.PacketDecoder;
 import com.bruis.learnnetty.im.codec.PacketEncoder;
 import com.bruis.learnnetty.im.codec.Spliter;
@@ -55,10 +52,14 @@ public class NettyClient {
                         ch.pipeline().addLast(new PacketDecoder());
                         // 登录响应
                         ch.pipeline().addLast(new LoginResponseHandler());
-                        ch.pipeline().addLast(new LogoutResponseHandler());
                         // 消息返回
                         ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
+                        ch.pipeline().addLast(new JoinGroupResponseHandler());
+                        ch.pipeline().addLast(new QuitGroupResponseHandler());
+                        ch.pipeline().addLast(new ListGroupMembersResponseHandler());
+                        ch.pipeline().addLast(new GroupMessageResponseHandler());
+                        ch.pipeline().addLast(new LogoutResponseHandler());
                         // 解码
                         ch.pipeline().addLast(new PacketEncoder());
                     }
