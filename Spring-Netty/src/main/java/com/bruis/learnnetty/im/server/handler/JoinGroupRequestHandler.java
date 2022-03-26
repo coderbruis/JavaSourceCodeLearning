@@ -3,6 +3,7 @@ package com.bruis.learnnetty.im.server.handler;
 import com.bruis.learnnetty.im.model.JoinGroupRequestPacket;
 import com.bruis.learnnetty.im.model.JoinGroupResponsePacket;
 import com.bruis.learnnetty.im.util.SessionUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -12,7 +13,12 @@ import io.netty.channel.group.ChannelGroup;
  * @Author luohaiyang
  * @Date 2022/3/24
  */
+@ChannelHandler.Sharable
 public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGroupRequestPacket> {
+
+    public static final JoinGroupRequestHandler INSTANCE = new JoinGroupRequestHandler();
+
+    protected JoinGroupRequestHandler() {}
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupRequestPacket msg) throws Exception {

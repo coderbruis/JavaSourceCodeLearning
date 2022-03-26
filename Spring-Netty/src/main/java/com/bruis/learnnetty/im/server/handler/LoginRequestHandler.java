@@ -5,18 +5,22 @@ import com.bruis.learnnetty.im.model.LoginResponsePacket;
 import com.bruis.learnnetty.im.session.Session;
 import com.bruis.learnnetty.im.util.IDUtil;
 import com.bruis.learnnetty.im.util.SessionUtil;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 
+import java.util.Arrays;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * @Description 接收客户端登录请求
  * @Author luohaiyang
  * @Date 2022/3/23
  */
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+
+    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
+
+    protected LoginRequestHandler() {}
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) {
@@ -38,7 +42,13 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         }
 
         // 登录响应
-        ctx.channel().writeAndFlush(loginResponsePacket);
+        ctx.writeAndFlush(loginResponsePacket).addListener((ChannelFutureListener) future -> {
+            // 关闭channel成功
+            Throwable cause = future.cause();
+            if (null != cause) {
+                System.out.println(Arrays.toString(cause.getStackTrace()));
+            }
+        });
     }
 
     private boolean valid(LoginRequestPacket loginRequestPacket) {
