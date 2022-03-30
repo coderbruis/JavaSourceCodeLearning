@@ -135,6 +135,10 @@ SpringCloud源码
     - Netty底层源码解析-FastThreadLocal原理分析
     - Netty底层源码解析-内存分配原理分析 
     - Netty底层源码解析-RocketMQ底层使用到的Netty
+    - [实战+原理效果更佳！强烈推荐闪电侠大佬实战课：《Netty 入门与实战：仿写微信 IM 即时通讯系统》](https://juejin.cn/book/6844733738119593991)
+    
+Netty实战课相关点位于：Spring-Netty，com/bruis/learnnetty/im包下，有需要的读者可前往查看。
+
 
 -   RocketMQ底层源码解析    
     - RocketMQ版本：4.9.0
@@ -146,7 +150,7 @@ SpringCloud源码
 
 todo
 
-2021年年底完成了人生的两件大事，所以一直没时间持续输出源码分析，2022年开始需要继续努力，完成这个源码分析项目！
+2021年年底完成了人生的两件大事，所以一直没时间持续输出源码分析，2022年开始需要继续努力，继续完成这个源码分析项目！
 
 - 完成Netty剩余源码分析文章
 - 完成RocketMQ剩余源码分析文章
