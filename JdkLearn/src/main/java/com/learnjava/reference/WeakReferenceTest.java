@@ -1,7 +1,5 @@
 package com.learnjava.reference;
 
-import com.sun.webkit.graphics.Ref;
-
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
