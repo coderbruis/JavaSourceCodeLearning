@@ -58,7 +58,7 @@ public class SnowIdUtils {
 //            String ip = instance.getDockerIp().replace(".", "");
             // 模拟获取机器节点ip
             String ip = "127.0.0.1";
-            long localIp = Long.valueOf(ip.replace(".", ""));
+            long localIp = Long.parseLong(ip.replace(".", ""));
             machineIdPart = (localIp & MAX_MACHINE_ID) << SEQUENCE_BIT;
         }
         /**
