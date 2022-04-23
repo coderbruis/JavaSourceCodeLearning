@@ -28,7 +28,7 @@ ApplicationContext bf = new ClassPathXmlApplicationContext("applicationContext.x
 ### DefaultListableBeanFactory
 DefaultListableBeanFactory是整个bean加载的核心部分，是Spring注册及加载bean的默认实现。下面看看DefaultListableBeanFactory的层次结构图。
 
-![图片1](https://note.youdao.com/yws/api/personal/file/A91C9C5BB33B48A4B501435C157FFD99?method=download&shareKey=2b9a7ef7fd42d051fec83fe3f5eef7a8)
+![spring-01](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-01.png)
 从上往下开始介绍各个类以及接口的作用：
 - AliasRegistry（接口）：alias指的是bean的别名，而aliasRegistry定义了对alias的增删改查等操作。
 - SimpleAliasRegistry（类）：主要使用map作为alias的缓存，并对接口AliasRegistry进行实现。
@@ -48,7 +48,7 @@ DefaultListableBeanFactory是整个bean加载的核心部分，是Spring注册�
 
 ### XmlBeanDefinitionReader
 XML配置文件的读取是Spring中最重要的功能，因为Spring的大部分功能都是以配置作为切入点的，XmlBeanDefinitionReader实现了对资源文件的读取、解析以及注册。先看一下XmlBeanDefinitionReader的层次结构图。
-![图片2](https://note.youdao.com/yws/api/personal/file/477FF4A409A94CBB8CF9A05A16D8F7D4?method=download&shareKey=de7d24b623d4c5bb7e65bb440438e271)
+![spring-02](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-02.png)
 
 - EnvironmentCapable（接口）：定义获取Environment方法，Environment代表了配置文件。
 - BeanDefinitionReader（接口）：主要定义资源文件读取并转换为BeanDefinition的各个功能。
@@ -96,7 +96,7 @@ Person{name='Bruis', age=23}
 
 ** 前方高能 **
 
-![图片3](https://note.youdao.com/yws/api/personal/file/219238FD61C146C99E137E303D52EA66?method=download&shareKey=d5e5aaa1e9fa782eeb056b89119c3565)
+![spring-03](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-03.jpg)
 
 通过在断点debug，跟踪程序运行。
 
@@ -146,7 +146,7 @@ public void setConfigLocations(String... locations) {
 
 下面我们来重点看看refresh()过程。
 
-![Image](https://note.youdao.com/yws/api/personal/file/76AE8FEDAFF54B6881C336B056AC5B0A?method=download&shareKey=430f5263180efd8467df6e6434456f3d)
+![spring-04](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-04.jpg)
 
 1. AbstractApplicationContext.class
 ```Java
@@ -239,8 +239,8 @@ protected final void refreshBeanFactory() throws BeansException {
 }
 ```
 这里先看看上面代码的loadBeanDefinitions()方法运行完后的结果
-![图片](https://note.youdao.com/yws/api/personal/file/59FBCD3CC1B54136A05309EA6B88FEB3?method=download&shareKey=80bdcfcbde0362b73eb633390c5b1042)
-![图片](https://note.youdao.com/yws/api/personal/file/E258907852284A6F93A2C305319EBB64?method=download&shareKey=7e1dba96d3b53ca9b6af017552f8fd31)
+![spring-05](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-05.png)
+![spring-06](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-06.png)
 从图中可以知道，loadBeanDefinitions()方法运行完后，在beanFactory变量里面存放着一个ConcurrentHashMap变量，用于存放着person这个KV键值对，Key为person，Value为一个ArrayList的变量，里面存放着person的两个属性：age、name。
 
 那么，person的属性是怎么被封装到beanFactory里面的呢？请看下面的源码解析。
@@ -409,7 +409,7 @@ protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
 
 下面，继续深入registerBeanDefinitions方法。
 
-![图片](https://note.youdao.com/yws/api/personal/file/861658D89B0D4B48A7ED56B554CF3028?method=download&shareKey=c3bc974e751495bac74d9ac9ec56cb75)
+![spring-07](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-07.jpg)
 
 1. XmlBeanDefinitionReader.class 
 ```Java
@@ -636,8 +636,8 @@ public void parsePropertyElement(Element ele, BeanDefinition bd) {
 }
 
 ```
-![Images](https://note.youdao.com/yws/api/personal/file/75CAC9D21AD64BAB89B0D25C8BBE7598?method=download&shareKey=89e73cf46fe18b1b85aecf8d58006f8e)
-![Images](https://note.youdao.com/yws/api/personal/file/CF65BB80EB934EBEBA49466CFAB261A0?method=download&shareKey=8b9f0078cf5a3171dfd69d00d9ba55f6)
+![spring-08](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-08.png)
+![spring-09](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-09.png)
 
 然后，就会一路返回到refresh()方法里的加载bean定义信息的方法——loadBeanDefinitions()，此时beanFactory里面就会存在一个带有KV对的ConcurrentHashMap，而这个beanFactory会存放在Spring容器里面。
 ```Java
@@ -648,8 +648,8 @@ customizeBeanFactory(beanFactory);
 loadBeanDefinitions(beanFactory);
 ```
 再看看DefaultListableBeanFactory里面的内容
-![Images](https://note.youdao.com/yws/api/personal/file/59FBCD3CC1B54136A05309EA6B88FEB3?method=download&shareKey=80bdcfcbde0362b73eb633390c5b1042)
-![Images](https://note.youdao.com/yws/api/personal/file/E258907852284A6F93A2C305319EBB64?method=download&shareKey=7e1dba96d3b53ca9b6af017552f8fd31)
+![spring-10](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-10.png)
+![spring-11](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-11.png)
 
 上面的过程，就已经完成了Spring容器的初始化过程，相信读者也已经对Spring容器的初始化有了一个大致的了解。下面总结一下Spring容器的初始化：
 - 第一个过程是Resource定位过程。这个Resource定位过程指的是BeanDefinition的资源定位，它由ResourceLoader通过统一的Resource接口来完成，这个Resource对各种形式的BeanDefinition的使用都提供了统一接口。这个定位过程类似于容器寻找数据的过程，就像使用水桶装水先要把水找到一样。
@@ -670,7 +670,7 @@ bean的创建和初始化过程是在refresh方法里的invokeBeanFactoryPostPro
 - 当容器关闭时，调用Bean的销毁方法
 
 下面先看看创建bean和初始化bean的时序图。
-![Images](https://note.youdao.com/yws/api/personal/file/8B415614A97D45B481925159264C344F?method=download&shareKey=1083828cfcea581b0aa5cae56e3f3090)
+![spring-12](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-12.jpg)
 
 1. AbstractApplicationContext.class
 ```Java
@@ -967,7 +967,7 @@ public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 ```
 
 无图无真相：
-![Images](https://note.youdao.com/yws/api/personal/file/4C30C0DA143E422FBD27E50AE71AC179?method=download&shareKey=2f4dff65df0e9761ede47d26782dd977)
+![spring-13](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/spring/spring-13.png)
 
 5. AbstractAutowireCapableBeanFactory.class
 ```Java
