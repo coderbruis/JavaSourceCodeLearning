@@ -51,7 +51,7 @@ Lock引起的将当前处理器缓存该变量的数据写回到系统内存中�
 
 每个处理器通过嗅探在总线上传播的数据来检查自己缓存的值是否过期，当处理器发现自己缓存行对于数据的内存地址被修改了，就会将当前缓存行设置为无效。当处理器对这个数据进行修改操作时，会重新从系统内存中读取该数据到处理器缓存中。
 
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-bTawJOHf-1596181331575)(https://note.youdao.com/yws/api/personal/file/AA87E3ABBEDB4A37B69D8E75B5ED12C1?method=download&shareKey=f9788b07ab72368f3613b2744614eecf)]
+![volatile-01](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/JDK/volatile-01.png)
 
 为了实现volatile的内存语义，编译期在生成字节码时会对使用volatile关键字修饰的变量进行处理，在字节码文件里对应位置生成一个Lock前缀指令，Lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成。
 
@@ -117,12 +117,12 @@ volatile读之后的操作不会被编译器重排序到volatile读之前。
 2. 在每个volatile写操作后插入StoreLoad屏障
 3. 在每个volatile读前面插入一个LoadLoad屏障
 4. 在每个volatile读后面插入一个LoadStore屏障
- 
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-Z1N3KBZj-1596181331583)(https://note.youdao.com/yws/api/personal/file/E11087F8FD5B4673ABD8C58F6F8DA232?method=download&shareKey=cf78d935c04cb11b039399e1d4825b74)]
+
+![volatile-02](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/JDK/volatile-02.png)
 - StoreStore屏障可以保证在volatile写之前，所有的普通写操作已经对所有处理器可见，StoreStore屏障保障了在volatile写之前所有的普通写操作已经刷新到主存。
 - StoreLoad屏障避免volatile写与下面有可能出现的volatile读/写操作重排。因为编译器无法准确判断一个volatile写后面是否需要插入一个StoreLoad屏障（写之后直接就return了，这时其实没必要加StoreLoad屏障），为了能实现volatile的正确内存语意，JVM采取了保守的策略。在每个volatile写之后或每个volatile读之前加上一个StoreLoad屏障，而大多数场景是一个线程写volatile变量多个线程去读volatile变量，同一时刻读的线程数量其实远大于写的线程数量。选择在volatile写后面加入StoreLoad屏障将大大提升执行效率（上面已经说了StoreLoad屏障的开销是很大的）。
 
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-pRcUS5Mm-1596181331589)(https://note.youdao.com/yws/api/personal/file/2A92B2D468A345F6A55C75249A89845A?method=download&shareKey=ac99a6bcd169bf4bcda8b0fbd33e0003)]
+![volatile-03](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/JDK/volatile-03.png)
 - LoadLoad屏障保证了volatile读不会与下面的普通读发生重排
 - LoadStore屏障保证了volatile读不回与下面的普通写发生重排。
 

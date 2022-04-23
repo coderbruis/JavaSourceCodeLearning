@@ -74,6 +74,7 @@ SpringCloud源码
     - [一篇文章快速深入学习ThreadLocal](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/JDK/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E5%BF%AB%E9%80%9F%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0ThreadLocal.md)
     - [深入学习Java volatile关键字](https://github.com/coderbruis/JavaSourceLearning/blob/master/note/JDK/%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0Java%20volatile%E5%85%B3%E9%94%AE%E5%AD%97.md)
     - [深入学习Thread底层原理](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/JDK/%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0Thread%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81.md)
+    - [深入学习JDK1.7、8 HashMap扩容原理]()
 
 -   Spring源码学习
     - Spring版本：5.2.1.RELEASE
@@ -135,6 +136,7 @@ SpringCloud源码
     - Netty底层源码解析-FastThreadLocal原理分析
     - Netty底层源码解析-内存分配原理分析 
     - Netty底层源码解析-RocketMQ底层使用到的Netty
+    - [Netty底层的优化总结]()
     - [实战+原理效果更佳！强烈推荐闪电侠大佬实战课：《Netty 入门与实战：仿写微信 IM 即时通讯系统》](https://juejin.cn/book/6844733738119593991)
     
 Netty实战课相关点位于：Spring-Netty，com/bruis/learnnetty/im包下，有需要的读者可前往查看。
