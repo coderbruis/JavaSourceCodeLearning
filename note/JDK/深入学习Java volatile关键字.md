@@ -96,7 +96,7 @@ d = 4;            //语句五
 **volatile内存语义的底层实现原理——内存屏障**
 
 为了实现volatile的内存语义，编译期在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。下图看看JMM针对编译期指定的volatile重排序的规则表：
-[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-nUC08aj9-1596181331578)(https://note.youdao.com/yws/api/personal/file/2DB4A9DDE8D243E680668BEDA1EA931D?method=download&shareKey=03684bd761521c57dfea00548eadeb15)]
+![volatile-04](https://github.com/coderbruis/JavaSourceCodeLearning/blob/master/note/images/JDK/volatile-04.png)
 就上面的图标，是什么含义呢？
 举例来说，
 
