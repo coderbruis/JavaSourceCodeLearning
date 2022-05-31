@@ -51,8 +51,9 @@ SimpleExt ext = ExtensionLoader.getExtensionLoader(SimpleExt.class).getDefaultEx
         }
         return loader;
     }
-```Java
-getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经缓存了该类型的扩展点加载器，如果没有则new一个该类型的ExtensionLoader并添加进EXTENSION_LOADERS中。但需要注意的是ExtensionLoader的构造方法
+```
+
+getExtensionLoader方法首先会去判断EXTENSION_LOADERS缓存中是否已经缓存了该类型的扩展点加载器，如果没有则new一个该类型的ExtensionLoader并添加进EXTENSION_LOADERS中。但需要注意的是ExtensionLoader的构造方法
 中，是会先创建默认的ExtensionFactory类型的ExtensionLoader对象，然后调用getAdaptiveExtension()方法创建适配类型的扩展点实现类。
 
 ```Java
@@ -112,7 +113,7 @@ getExtensionLoader方法首先回去判断EXTENSION_LOADERS缓存中是否已经
             loadDirectory(extensionClasses, strategy.directory(), type.getName().replace("org.apache", "com.alibaba"), strategy.preferExtensionClassLoader(), strategy.overridden(), strategy.excludedPackages());
         }
 
-        // 这里只会返回非Adaptive和非Wrapper类型的扩展点实现类Class，因为Adaptive会被缓存到cachedAdaptiveClasses缓存中，儿Wrapper类型的类会被缓存到cachedWrapperClasses缓存中。
+        // 这里只会返回非Adaptive和非Wrapper类型的扩展点实现类Class，因为Adaptive会被缓存到cachedAdaptiveClasses缓存中，而Wrapper类型的类会被缓存到cachedWrapperClasses缓存中。
         return extensionClasses;
     }
 
@@ -267,10 +268,10 @@ public class AdaptiveExtensionFactory implements ExtensionFactory {
 }
 ```
 
-① 中逻辑是这样的，调用ExtensionLoader#getSupportedExtensions()回去加载ExtensionFactory所有的扩展点实现类，并返回一个扩展点名称作为Key，扩展点实现类Class对象为Value的Map集合，
+① 中逻辑是这样的，调用ExtensionLoader#getSupportedExtensions()会去加载ExtensionFactory所有的扩展点实现类，并返回一个扩展点名称作为Key，扩展点实现类Class对象为Value的Map集合，
 在上面的SPI配置文件中已经展示出来了，所以这里获取到的是spi。
 
-// 有人可能会问，上面的SPI配置文件不是还有一个adaptive吗？为什么没加载进来呢？这是因为getSupportedExtension()中实际是调用getExtensionClasses()方法去获取Map集合，而其底层是去从cachedClasses缓存中
+有人可能会问，上面的SPI配置文件不是还有一个adaptive吗？为什么没加载进来呢？这是因为getSupportedExtension()中实际是调用getExtensionClasses()方法去获取Map集合，而其底层是去从cachedClasses缓存中
 获取，而adaptive扩展点实现类是缓存在了cachedAdaptiveClass中的。
 
 
@@ -384,5 +385,7 @@ public class SimpleExt$Adaptive implements org.apache.dubbo.common.extension.ext
 
 
 ### 3. @Activate注解
+
+TODO
 
 
