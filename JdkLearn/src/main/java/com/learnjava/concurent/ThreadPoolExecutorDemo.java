@@ -1,5 +1,8 @@
 package com.learnjava.concurent;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -18,6 +21,12 @@ public class ThreadPoolExecutorDemo {
      * 验证ThreadPoolExecutor中的二进制位运算操作
      */
     private static void testThreadPoolExecutorBinaryCalc() {
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        executorService.execute(() -> {
+            System.out.println("executor test...");
+        });
+
+
 //        System.out.println(ctl.get());
 //        System.out.println(Integer.toBinaryString(ctlOf(RUNNING, 0)));
 //        System.out.println(Integer.toBinaryString(RUNNING));
