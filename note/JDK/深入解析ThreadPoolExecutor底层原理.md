@@ -74,7 +74,7 @@ CAPACITY: 00011111 11111111 11111111 11111111
 总结：掩码就是“过滤器”，CAPACITY 这个掩码专门用来从 ctl 里取出 workerCount。
 
 ## 线程池相关状态
-线程池完整生命周期图：
+线程池完整生命周期图（图1）
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/12890164/1780810463940-3a2fb7db-c019-4d2a-88ed-b395d768d830.png)
@@ -182,6 +182,8 @@ private static final int TERMINATED = 3 << COUNT_BITS;
 ```
 
 ## 二进制图总结
+图2
+
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/12890164/1780810735409-8b698335-3b31-4cc0-a3cf-d4f57367ac50.png)
 
@@ -551,8 +553,6 @@ wt.interrupt() 不是杀线程，而是给工作线程设置**<font style="color
 
 
 
-
-
 > **第二层：为什么要调用 Thread.interrupted()之后，还要再次判断runStateAtLeast(ctl.get(), STOP)**
 >
 
@@ -569,9 +569,11 @@ wt.interrupt() 不是杀线程，而是给工作线程设置**<font style="color
 
 
 
-三层判断总体意思就是：只要线程池已经进入 STOP 状态，就要求 worker 必须是中断状态。如果 worker 还不是中断状态，就补一次 interrupt。
+三层判断总体意思就是：只要线程池已经进入 STOP 状态，就要求 worker 必须是中断状态。如果 worker 还不是中断状态，就补一次 interrupt。只要线程池已经进入 STOP，就确保当前 worker 线程带着中断标记执行任务。
 
 
+
+这一段复杂的判断主要是应对shutdownNow()触发的线程池状态=STOP的场景，而shutdown()是会tryLock()竞争锁，拿不到锁则不会对worker发起中断。
 
 ## getTask()
 getTask()的作用：是 ThreadPoolExecutor 里 Worker 从阻塞队列获取任务的核心方法。
@@ -780,6 +782,29 @@ public List<Runnable> shutdownNow() {
 
 
 
+shutdownNow()会立马让线程池状态推进到STOP，然后调用interruptWorkers()中断所有worker，因此worker在runWorker()中拿到锁准备执行用户任务task.run()之前，也要先进行判断：
+
+```java
+              if ((runStateAtLeast(ctl.get(), STOP) ||
+                     (Thread.interrupted() &&
+                      runStateAtLeast(ctl.get(), STOP))) &&
+                    !wt.isInterrupted())
+                  // 只要线程池已经进入 STOP，就确保当前 worker 线程带着中断标记执行任务。
+                    wt.interrupt();
+```
+
+wt.interrupt()最后还是会给执行用户任务的线程标记“中断”，最后中断是否会导致worker线程“结束”任务，具体看用户线程是否调用了能响应中断的逻辑，比如：
+
+```java
+Thread.sleep()
+BlockingQueue.take()
+Condition.await()
+```
+
+这类方法会抛出InterruptedException提前结束。
+
+或者任务代码自己判断 Thread.currentThread().isInterrupted()，然后主动退出。如果用户任务完全不理中断，比如死循环不检查中断，那么 shutdownNow()也不能强制让它停下来。
+
 ### shutdown和shutdownNow的区别
 > **<font style="color:#DF2A3F;">shutdown</font>**
 >
@@ -831,4 +856,75 @@ try {
 5. shutdown() 等待超时后的兜底动作
 
 
+
+
+
+
+
+## 线程池任务调用流程图
+图3
+
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/12890164/1780886199772-60d2b78f-8991-4c11-afe9-8211912af596.png)
+
+# 其他细节
+## execute()入队之后的二次检查
+execute() 入队后的二次检查，不只是防止任务丢失
+
+```java
+if (isRunning(c) && workQueue.offer(command)) {
+    int recheck = ctl.get();
+    if (!isRunning(recheck) && remove(command))
+        reject(command);
+    else if (workerCountOf(recheck) == 0)
+        addWorker(null, false);
+}
+```
+
+二次检查作用：防止线程池关闭后任务被错误保留，以及队列有任务但没有 worker 执行。
+
+
+
+## Worker本身就是一个锁（AQS）
+源码中可以看到，Worker继承了AbstractQueuedSynchronizer
+
+```java
+Worker extends AbstractQueuedSynchronizer
+```
+
+因此在调用runWorker()时会先加锁，然后执行用户任务，等结束了再释放锁：
+
+```java
+...
+w.lock();
+...
+task.run();
+...
+w.unlock();
+```
+
+这段代码核心作用：标记当前 worker 正在执行任务，防止 shutdown() 中断它。但是没法防止shutdownNow()进行中断，中断与否则是要看用户任务，在上文shutdownNow()有详细分析。
+
+## 核心线程和非核心线程没有身份标记
+线程池里没有字段标记：
+
+```plain
+这个 worker 是核心线程
+那个 worker 是非核心线程
+```
+
+而是动态判断：
+
+```plain
+workerCount > corePoolSize
+```
+
+超过 `corePoolSize` 的线程，空闲时就可能被回收。
+
+## 拒绝策略不只在队列满时触发
+常见理解是：队列满 + 线程数满 -> reject
+
+但其实还有：线程池不是 RUNNING 状态，也会 reject。
+
+例如已经shutdown()后再提交任务，则会被reject。
 
