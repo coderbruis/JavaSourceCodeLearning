@@ -1,7 +1,7 @@
 当前分析版本是kafka最新版本 4.2（版本随时变化，最新分析代码请关注仓库：[https://github.com/coderbruis/kafka](https://github.com/coderbruis/kafka)   **<font style="color:#DF2A3F;">source_code_analysis分支</font>**，底层原理持续更新）
 
 # kafka服务端核心逻辑
-目前最新版本kafka已经抛弃了Zookeeper，而是自己维护元数据日志，存放在内部 topic __cluster_metadata。
+目前最新版本kafka已经抛弃了Zookeeper，而是自己维护元数据日志，存放在内部 topic: __cluster_metadata。
 
 如果使用默认的配置方式 config/server.properties启动：
 
@@ -26,7 +26,7 @@ bin/kafka-server-start.sh
 配置方式不同，启动链路不同：
 
 ```java
-rocess.roles=broker
+process.roles=broker
   ...
   KafkaRaftServer.startup()
    -> BrokerServer.startup()
@@ -52,7 +52,7 @@ process.roles=broker,controller
 
 ****
 
-**broker,controller部署方式适合本地开发。正式生产，适合独立 controller + 独立 broker，大规模生产适合独立 controller quorum集群 + 独立 broker 集群。**
+**broker,controller部署方式适合本地开发。正式生产环境，适合独立部署controller + 独立部署broker，大规模生产适合独立 controller quorum集群 + 独立 broker 集群。**
 
 ## Kafka.scala
 Kafka.scala中main()是 Kafka broker 进程的 JVM 入口，它本身不做具体 broker 组件初始化，核心作用是把进程启动流程串起来，源码如下：
@@ -150,7 +150,7 @@ socketServer = new SocketServer(config,
 val enableRequestProcessingFuture = socketServer.enableRequestProcessing(authorizerFutures)
 ```
 
-创建网络入口。此时准备 acceptor 和端口，真正处理请求会延后开启。enableRequestProcessing()开启 SocketServer 请求处理。
+SocketServer 用于创建网络入口。此时准备 acceptor 和端口，真正处理请求会延后开启。enableRequestProcessing()开启 SocketServer 请求处理。
 
 
 
