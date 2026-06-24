@@ -1,4 +1,4 @@
-当前分析版本是kafka最新版本 4.2（版本随时变化，最新分析代码请关注仓库：[https://github.com/coderbruis/kafka](https://github.com/coderbruis/kafka)   **<font style="color:#DF2A3F;">source_code_analysis分支</font>**，底层原理持续更新）
+当前分析版本是kafka最新版本（版本随时变化，最新分析代码请关注仓库：[https://github.com/coderbruis/kafka](https://github.com/coderbruis/kafka)   **<font style="color:#DF2A3F;">source_code_analysis分支</font>**，底层原理持续更新）
 
 # kafka消费者核心入口poll
 kafka消费者核心入口在KafkaConsumer.poll()：
