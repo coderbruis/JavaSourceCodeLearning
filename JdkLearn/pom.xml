@@ -32,6 +32,13 @@
             <artifactId>netty-all</artifactId>
         </dependency>
 
+        <!-- 线程池上下文传递 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+            <version>2.14.5</version>
+        </dependency>
+
         <!-- redis依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
