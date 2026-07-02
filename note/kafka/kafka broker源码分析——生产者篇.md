@@ -1,4 +1,5 @@
-当前分析版本是kafka最新版本（版本随时变化，最新分析代码请关注仓库：[https://github.com/coderbruis/kafka](https://github.com/coderbruis/kafka)   **<font style="color:#DF2A3F;">source_code_analysis分支</font>**，底层原理持续更新）
++ 当前分析版本是kafka最新版本（版本随时变化，最新分析代码请关注仓库：[https://github.com/coderbruis/kafka](https://github.com/coderbruis/kafka)   **<font style="color:#DF2A3F;">source_code_analysis分支</font>**，底层原理持续更新）
++ 转载请标明出处
 
 # KafkaRequestHandler核心流程
 `KafkaRequestHandler.run()` 是在 **创建 **`**KafkaRequestHandlerPool**`** 时触发的**。

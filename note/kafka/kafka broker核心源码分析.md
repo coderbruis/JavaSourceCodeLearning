@@ -1,4 +1,5 @@
-当前分析版本是kafka最新版本（版本随时变化，最新分析代码请关注仓库：[https://github.com/coderbruis/kafka](https://github.com/coderbruis/kafka)   **<font style="color:#DF2A3F;">source_code_analysis分支</font>**，底层原理持续更新）
++ 当前分析版本是kafka最新版本（版本随时变化，最新分析代码请关注仓库：[https://github.com/coderbruis/kafka](https://github.com/coderbruis/kafka)   **<font style="color:#DF2A3F;">source_code_analysis分支</font>**，底层原理持续更新）
++ 转载请标明出处
 
 # kafka服务端核心逻辑
 目前最新版本kafka已经抛弃了Zookeeper，而是自己维护元数据日志，存放在内部 topic: __cluster_metadata。
